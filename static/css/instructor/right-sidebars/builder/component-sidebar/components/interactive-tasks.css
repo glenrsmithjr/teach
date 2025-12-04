@@ -1,0 +1,35 @@
+/* Interactive Task: Matching */
+.matching-task { display: flex; justify-content: space-around; height: 100%; position: relative;}
+.matching-column { width: 45%; display: flex; flex-direction: column; gap: 8px; }
+.matching-item { padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; background: #fff; text-align: center; }
+.matching-item.selected { border-color: var(--builder-primary); box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+.matching-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* Interactive Task: Ordering/Categorization */
+.interactive-task-container { display: flex; gap: 10px; width: 100%; height: 100%; overflow: auto; padding: 5px; background: #f8f9fa; border-radius: 6px; }
+.ordering-list, .categorization-bucket, .categorization-bank {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    min-height: 100px;
+    flex-grow: 1;
+}
+.categorization-bank { flex-basis: 100%; }
+.categorization-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.categorization-buckets-wrapper { display: flex; gap: 10px; }
+.interactive-task-item { padding: 10px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: grab; }
+.sortable-ghost { opacity: 0.4; background: #c7d2fe; }
+
+/* Interactive Task: Fill in Blanks */
+.fill-in-blanks-container { width: 100%; height: 100%; border: 1px solid #d1d5db; padding: 8px; border-radius: 6px; background: #fff; overflow-y: auto; }
+.fill-in-blanks-container .blank-input {
+    border: none;
+    border-bottom: 1px solid #6b7280;
+    background: #f3f4f6;
+    padding: 2px 4px;
+    text-align: center;
+    min-width: 80px;
+}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tutors - Apprentice Tutors</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #f3f4f6; }
+        .sidebar-expanded { width: 280px; }
+        .main-content { margin-left: 280px; }
+        .action-menu { display: none; }
+        .action-menu.show { display: block; }
+        .toast { visibility: hidden; opacity: 0; transition: opacity 0.5s, visibility 0.5s; }
+        .toast.show { visibility: visible; opacity: 1; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="fixed top-0 left-0 z-40 h-screen bg-gray-900 text-gray-100 shadow-xl flex flex-col sidebar-expanded">
+            <!-- Sidebar content remains the same... -->
+            <div class="flex items-center justify-between p-5 border-b border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">A</div>
+                    <div class="font-bold text-xl whitespace-nowrap">Apprentice Tutors</div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto py-5 px-3">
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2">Main</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-home"></i></div>
+                    <div class="whitespace-nowrap">Dashboard</div>
+                </a>
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Tutors</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-plus-circle"></i></div>
+                    <div class="whitespace-nowrap">Create Tutor</div>
+                </a>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all bg-indigo-500">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-tasks"></i></div>
+                    <div class="whitespace-nowrap">Manage Tutors</div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content w-full p-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <!-- Header and Actions -->
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Manage Tutors</h1>
+                        <p class="mt-1 text-gray-600">Create, edit, and publish your instructional tutors.</p>
+                    </div>
+                    <button onclick="alert('Open Create Tutor Page')" class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2 text-sm font-semibold shadow">
+                        <i class="fas fa-plus"></i> Create New Tutor
+                    </button>
+                </div>
+
+                <!-- Search and Filter Controls -->
+                <div class="flex flex-wrap items-center gap-4 mb-4">
+                    <div class="relative flex-grow">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
+                        <input type="text" id="tutor-search" placeholder="Search by tutor name..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <select id="tutor-status-filter" class="appearance-none bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="all">All Statuses</option>
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                    </select>
+                    <select id="tutor-course-filter" class="appearance-none bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="all">All Courses</option>
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Tutors Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tutor Name</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Course</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modules</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="py-3 px-6 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tutors-table-body" class="text-gray-700">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="toast fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg">
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        let dummyTutors = [
+            { id: 101, name: 'Solving Linear Equations', course: 'Advanced Algebra', modules: 5, status: 'Published' },
+            { id: 102, name: 'Python List Comprehensions', course: 'Introduction to Python', modules: 1, status: 'Published' },
+            { id: 103, name: 'HTML Structure Basics', course: 'Web Development Basics', modules: 2, status: 'Draft' },
+            { id: 104, name: 'Recursive Functions', course: 'Data Structures 101', modules: 3, status: 'Published' },
+            { id: 105, name: 'CSS Flexbox Guide', course: 'Web Development Basics', modules: 6, status: 'Published' },
+            { id: 106, name: 'Understanding Polynomials', course: 'Advanced Algebra', modules: 3, status: 'Draft' },
+        ];
+        let nextTutorId = 107;
+
+        function renderTutorsTable(tutors) {
+            const tableBody = document.getElementById('tutors-table-body');
+            tableBody.innerHTML = tutors.map(tutor => {
+                const statusBadge = tutor.status === 'Published'
+                    ? `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200">Published</span>`
+                    : `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-yellow-600 bg-yellow-200">Draft</span>`;
+                return `
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-6 font-medium">${tutor.name}</td>
+                        <td class="py-4 px-6 text-gray-600">${tutor.course || 'Unassigned'}</td>
+                        <td class="py-4 px-6">${tutor.modules}</td>
+                        <td class="py-4 px-6">${statusBadge}</td>
+                        <td class="py-4 px-6 text-right relative">
+                            <button onclick="toggleActionMenu(event, ${tutor.id})" class="text-gray-500 hover:text-indigo-600 focus:outline-none"><i class="fas fa-ellipsis-v"></i></button>
+                            <div id="action-menu-${tutor.id}" class="action-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 text-left">
+                                <a href="#" onclick="editTutor(${tutor.id})" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-pencil-alt w-6"></i>Edit Tutor</a>
+                                <a href="#" onclick="cloneTutor(${tutor.id})" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-clone w-6"></i>Clone</a>
+                                <div class="border-t my-1"></div>
+                                <a href="#" onclick="deleteTutor(${tutor.id})" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"><i class="fas fa-trash-alt w-6"></i>Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        // --- ACTION FUNCTIONS (unchanged) ---
+        function editTutor(id) { const tutor = dummyTutors.find(t => t.id === id); alert(`This would navigate to the edit page for tutor:\n"${tutor.name}"`); }
+        function cloneTutor(id) { const originalTutor = dummyTutors.find(t => t.id === id); if (!originalTutor) return; const newTutor = { ...originalTutor, id: nextTutorId++, name: `${originalTutor.name} (Copy)`, status: 'Draft' }; dummyTutors.unshift(newTutor); filterAndRender(); showToast(`Tutor "${originalTutor.name}" was cloned successfully.`); }
+        function deleteTutor(id) { const tutorIndex = dummyTutors.findIndex(t => t.id === id); if (tutorIndex === -1) return; const tutorName = dummyTutors[tutorIndex].name; if (confirm(`Are you sure you want to delete the tutor "${tutorName}"? This action cannot be undone.`)) { dummyTutors.splice(tutorIndex, 1); filterAndRender(); showToast(`Tutor "${tutorName}" was deleted.`, 'bg-red-500'); } }
+        
+        // --- UTILITY & EVENT LISTENERS ---
+        function filterAndRender() {
+            const searchTerm = document.getElementById('tutor-search').value.toLowerCase();
+            const statusFilter = document.getElementById('tutor-status-filter').value;
+            const courseFilter = document.getElementById('tutor-course-filter').value;
+            
+            let filtered = dummyTutors
+                .filter(t => t.name.toLowerCase().includes(searchTerm))
+                .filter(t => statusFilter === 'all' || t.status === statusFilter)
+                .filter(t => courseFilter === 'all' || t.course === courseFilter);
+            
+            renderTutorsTable(filtered);
+        }
+        
+        function populateCourseFilter() {
+            const courseFilterSelect = document.getElementById('tutor-course-filter');
+            const courses = [...new Set(dummyTutors.map(t => t.course).filter(Boolean))]; // Get unique, non-null course names
+            courses.sort().forEach(courseName => {
+                const option = document.createElement('option');
+                option.value = courseName;
+                option.textContent = courseName;
+                courseFilterSelect.appendChild(option);
+            });
+        }
+
+        function showToast(message, colorClass = 'bg-green-500') { const toast = document.getElementById('toast-notification'); const toastMessage = document.getElementById('toast-message'); toastMessage.textContent = message; toast.className = `toast fixed bottom-5 right-5 text-white py-2 px-4 rounded-lg shadow-lg ${colorClass}`; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+        function toggleActionMenu(event, id) { event.stopPropagation(); closeAllActionMenus(); document.getElementById(`action-menu-${id}`).classList.toggle('show'); }
+        function closeAllActionMenus() { document.querySelectorAll('.action-menu').forEach(menu => menu.classList.remove('show')); }
+
+        document.addEventListener('click', closeAllActionMenus);
+        document.addEventListener('DOMContentLoaded', () => {
+            populateCourseFilter();
+            filterAndRender();
+            document.getElementById('tutor-search').addEventListener('keyup', filterAndRender);
+            document.getElementById('tutor-status-filter').addEventListener('change', filterAndRender);
+            document.getElementById('tutor-course-filter').addEventListener('change', filterAndRender);
+        });
+    </script>
+</body>
+</html>

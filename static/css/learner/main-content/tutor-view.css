@@ -1,0 +1,125 @@
+/* static/css/learner/learner-tutor.css */
+
+:root {
+    --session-transition-speed: 0.6s;
+}
+
+/* Base Styles */
+.learner-tutor-body {
+    background-color: #f3f4ff;
+    /* Ensure the body takes at least the full height */
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.learner-tutor-sidebar-transition { transition: width 0.3s ease-in-out; }
+.learner-tutor-sidebar-expanded { width: 280px; }
+.learner-tutor-sidebar-collapsed { width: 88px; }
+.learner-tutor-main-content { transition: margin-left 0.3s ease-in-out; }
+/*.learner-tutor-content-with-sidebar-expanded { margin-left: 280px; }
+.learner-tutor-content-with-sidebar-collapsed { margin-left: 88px; }*/
+
+/* Progress Bar Styles */
+.learner-tutor-progress-bar-bg { background-color: #e5e7eb; }
+.learner-tutor-progress-bar { background-color: #4f46e5; transition: width 0.5s ease-in-out; }
+
+/* Main Animation Styles */
+#learner-tutor-main-flex-container {
+    transition: justify-content var(--session-transition-speed) ease-in-out;
+    /* Vertically center the tutor card and analytics card */
+    align-items: start;
+}
+
+#learner-tutor-tutor-container {
+    transition: width var(--session-transition-speed) ease-in-out,
+                flex-grow var(--session-transition-speed) ease-in-out,
+                padding var(--session-transition-speed) ease-in-out,
+                opacity calc(var(--session-transition-speed) * 0.7) ease-in,
+                margin-right var(--session-transition-speed) ease-in-out;
+    overflow: auto;
+    background-color: #ffffff;
+    padding: 1.5rem; /* p-6 */
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+    min-width: 0;
+    height: 80vh;
+
+    /* NEW: Use flex to organize the nav and content area */
+    display: flex;
+    flex-direction: column;
+}
+
+#learner-tutor-analytics-container {
+    transition: all var(--session-transition-speed) ease-in-out;
+    transition-delay: 0s;
+    max-height: calc(100vh - 4rem); /* 100vh - p-8 (top/bottom) */
+    overflow-y: auto;
+}
+
+#learner-tutor-main-flex-container.session-ended {
+    justify-content: center;
+}
+
+#learner-tutor-main-flex-container.session-ended #learner-tutor-analytics-container {
+    transition-delay: var(--session-transition-speed);
+}
+
+#learner-tutor-main-flex-container.session-ended #learner-tutor-tutor-container {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    opacity: 0;
+    flex-grow: 0;
+    margin-right: -2rem; /* Matches parent gap-8 */
+}
+
+/* Confirmation Modal Styles */
+.learner-tutor-modal-overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.learner-tutor-modal-content {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.learner-tutor-hidden {
+    pointer-events: none;
+    opacity: 0;
+    display: none;
+}
+
+.learner-tutor-hidden .learner-tutor-modal-content {
+    transform: scale(0.95);
+}
+
+/* --- STYLES FOR NAV BUTTONS --- */
+
+.tutor-nav-btn.tutor-nav-active {
+    background-color: #2563eb; /* bg-blue-600 */
+    color: white;
+    border-color: #2563eb; /* border-blue-600 */
+    cursor: default;
+}
+
+.tutor-nav-btn:hover {
+    position: relative;
+    z-index: 10;
+}
+
+.tutor-nav-btn.tutor-nav-active {
+    z-index: 5; /* Active button sits below hovered buttons */
+}
+
+#tutor-content-area {
+    /* Use flexbox to center content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+
+    /* Allow it to grow and fill available space */
+    flex-grow: 1;
+
+    /* Ensure it can grow/shrink as needed */
+    width: 100%;
+}

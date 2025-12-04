@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard - Apprentice Tutors</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom styles for sidebar transitions and layout */
+        body {
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+
+        .sidebar-transition {
+            transition: width 0.3s ease-in-out;
+        }
+
+        .sidebar-expanded {
+            width: 280px;
+        }
+
+        .sidebar-collapsed {
+            width: 88px;
+        }
+
+        .sidebar-collapsed #logoText,
+        .sidebar-collapsed .whitespace-nowrap,
+        .sidebar-collapsed h3 {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content-with-sidebar-expanded {
+            margin-left: 280px;
+        }
+
+        .content-with-sidebar-collapsed {
+            margin-left: 88px;
+        }
+
+        #sidebarToggle svg {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed #sidebarToggle svg {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed top-0 left-0 z-40 h-screen sidebar-transition bg-gray-900 text-gray-100 shadow-xl flex flex-col overflow-hidden sidebar-expanded">
+            <div class="flex items-center justify-between p-5 border-b border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                        A
+                    </div>
+                    <div id="logoText" class="font-bold text-xl whitespace-nowrap transition-opacity duration-300">
+                        Apprentice Tutors
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto py-5 px-3">
+                <!-- Main -->
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2">Main</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all bg-indigo-500" onclick="handleMenuItemClick(event, 'dashboard')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300">Dashboard</div>
+                </a>
+
+                <!-- Tutors -->
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Tutors</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'create-tutor')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-plus-circle"></i></div>
+                    <div class="whitespace-nowrap transition-all duration-300">Create Tutor</div>
+                </a>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'manage-tutors')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-tasks"></i></div>
+                    <div class="whitespace-nowrap transition-all duration-300">Manage Tutors</div>
+                </a>
+
+                <!-- Learner Management -->
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Learners</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'learners')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-users"></i></div>
+                    <div class="whitespace-nowrap transition-all duration-300">Learners</div>
+                </a>
+            </div>
+
+            <!-- Sidebar Toggle -->
+            <div id="sidebarToggle" class="absolute right-[-16px] bottom-5 w-8 h-8 bg-indigo-500 text-white rounded-full flex items-center justify-center cursor-pointer border-2 border-white shadow-md z-50" onclick="toggleSidebar()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+
+    </div>
+
+    <script>
+        // --- DUMMY DATA ---
+        const dummyData = {
+            metrics: {
+                totalLearners: 124,
+                activeCourses: 8,
+                authoredTutors: 27,
+                avgEngagement: "High"
+            },
+            courses: [
+                { id: 1, name: 'Introduction to Python', learners: 45, tutors: 12 },
+                { id: 2, name: 'Advanced Algebra', learners: 32, tutors: 8 },
+                { id: 3, name: 'Web Development Basics', learners: 28, tutors: 5 },
+                { id: 4, name: 'Data Structures 101', learners: 19, tutors: 2 },
+            ],
+            tutors: [
+                { id: 101, name: 'Solving Linear Equations', modules: 5, course: 'Advanced Algebra', status: 'Published' },
+                { id: 102, name: 'Python List Comprehensions', modules: 1, course: 'Introduction to Python', status: 'Published' },
+                { id: 103, name: 'HTML Structure Basics', modules: 2, course: 'Web Development Basics', status: 'Draft' },
+                { id: 104, name: 'Recursive Functions', modules: 3, course: 'Data Structures 101', status: 'Published' },
+            ],
+            activityFeed: [
+                { icon: 'fa-user-plus', color: 'indigo', text: "<strong>Jane Doe</strong> enrolled in 'Introduction to Python'.", time: '2 hours ago' },
+                { icon: 'fa-pencil-alt', color: 'yellow', text: "Tutor <strong>'HTML Structure Basics'</strong> was updated.", time: '1 day ago' },
+                { icon: 'fa-plus-circle', color: 'green', text: "New course <strong>'Web Development Basics'</strong> was created.", time: '2 days ago' },
+                { icon: 'fa-check-circle', color: 'blue', text: "<strong>John Smith</strong> completed the 'Advanced Algebra' course.", time: '3 days ago' },
+            ]
+        };
+
+        // --- INTERACTIVITY & HELPER FUNCTIONS ---
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content-container');
+            sidebar.classList.toggle('sidebar-expanded');
+            sidebar.classList.toggle('sidebar-collapsed');
+            content.classList.toggle('content-with-sidebar-expanded');
+            content.classList.toggle('content-with-sidebar-collapsed');
+        }
+
+
+        function navigateTo(path) {
+            console.log(`Navigating to path: ${path}`);
+            alert(`This would navigate to the page for: ${path}`);
+        }
+
+        function downloadReport(reportType) {
+            console.log(`Initiating download for ${reportType} report...`);
+            alert(`A CSV report for '${reportType}' would start downloading now.`);
+        }
+        
+        // --- DATA POPULATION FUNCTIONS ---
+
+        function populateMetrics() {
+            document.getElementById('metric-total-learners').textContent = dummyData.metrics.totalLearners;
+            document.getElementById('metric-active-courses').textContent = dummyData.metrics.activeCourses;
+            document.getElementById('metric-authored-tutors').textContent = dummyData.metrics.authoredTutors;
+            document.getElementById('metric-avg-engagement').textContent = dummyData.metrics.avgEngagement;
+        }
+
+        function populateCourses() {
+            const container = document.getElementById('courses-list');
+            container.innerHTML = ''; // Clear loading text
+            dummyData.courses.forEach(course => {
+                const courseHtml = `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div>
+                            <p class="font-semibold text-gray-700">${course.name}</p>
+                            <p class="text-sm text-gray-500">${course.learners} Learners • ${course.tutors} Tutors</p>
+                        </div>
+                        <a href="#" onclick="navigateTo('/course/view/${course.id}')" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">View Details</a>
+                    </div>
+                `;
+                container.innerHTML += courseHtml;
+            });
+        }
+
+        function populateTutors() {
+            const container = document.getElementById('tutors-list');
+            container.innerHTML = ''; // Clear loading text
+            dummyData.tutors.forEach(tutor => {
+                const statusBadge = tutor.status === 'Published'
+                    ? `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200">Published</span>`
+                    : `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-yellow-600 bg-yellow-200">Draft</span>`;
+                
+                const tutorHtml = `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div>
+                            <p class="font-semibold text-gray-700">${tutor.name}</p>
+                            <p class="text-sm text-gray-500">${tutor.modules} Modules • Assigned to '${tutor.course}'</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            ${statusBadge}
+                            <a href="#" onclick="navigateTo('/tutor/edit/${tutor.id}')" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">Edit</a>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += tutorHtml;
+            });
+        }
+
+        function populateActivityFeed() {
+            const container = document.getElementById('activity-feed');
+            container.innerHTML = ''; // Clear loading text
+            const colorMap = {
+                indigo: { bg: 'bg-indigo-100', text: 'text-indigo-500' },
+                yellow: { bg: 'bg-yellow-100', text: 'text-yellow-500' },
+                green: { bg: 'bg-green-100', text: 'text-green-500' },
+                blue: { bg: 'bg-blue-100', text: 'text-blue-500' },
+            };
+
+            dummyData.activityFeed.forEach(item => {
+                const colors = colorMap[item.color] || colorMap['indigo'];
+                const activityHtml = `
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <span class="w-8 h-8 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center">
+                                <i class="fas ${item.icon}"></i>
+                            </span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-gray-700">${item.text}</p>
+                            <p class="text-xs text-gray-500">${item.time}</p>
+                        </div>
+                    </li>
+                `;
+                container.innerHTML += activityHtml;
+            });
+        }
+        
+        // --- INITIALIZATION ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Use a slight delay to simulate an API call
+            setTimeout(() => {
+                populateMetrics();
+                populateCourses();
+                populateTutors();
+                populateActivityFeed();
+            }, 500);
+        });
+    </script>
+
+</body>
+</html>

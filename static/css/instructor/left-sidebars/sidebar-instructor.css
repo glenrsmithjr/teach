@@ -1,0 +1,61 @@
+.sidebar-transition {
+    transition: all 0.3s ease-in-out;
+}
+
+.submenu-transition {
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.rotate-icon {
+    transform: rotate(-90deg);
+    transition: transform 0.3s ease;
+}
+
+.submenu-collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.submenu-expanded {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.sidebar-collapsed {
+    width: 5rem;
+}
+
+.sidebar-expanded {
+    width: 16rem;
+}
+
+.content-with-sidebar-collapsed {
+    margin-left: 5rem;
+}
+
+.content-with-sidebar-expanded {
+    margin-left: 16rem;
+}
+
+.invisible-collapsed {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    transition: opacity 0.3s, visibility 0.3s, width 0.3s;
+}
+
+.visible-expanded {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.dropdown-hover:hover .dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+}

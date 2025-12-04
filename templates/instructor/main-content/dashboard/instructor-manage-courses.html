@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Courses - Apprentice Tutors</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #f3f4f6; }
+        .sidebar-expanded { width: 280px; }
+        .main-content { margin-left: 280px; }
+        .action-menu { display: none; }
+        .action-menu.show { display: block; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="fixed top-0 left-0 z-40 h-screen bg-gray-900 text-gray-100 shadow-xl flex flex-col sidebar-expanded">
+            <!-- Sidebar content remains the same... -->
+            <div class="flex items-center justify-between p-5 border-b border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">A</div>
+                    <div class="font-bold text-xl whitespace-nowrap">Apprentice Tutors</div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto py-5 px-3">
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2">Main</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-home"></i></div>
+                    <div class="whitespace-nowrap">Dashboard</div>
+                </a>
+                <h3 class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Tutors</h3>
+                <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-plus-circle"></i></div>
+                    <div class="whitespace-nowrap">Create Tutor</div>
+                </a>
+                 <a href="#" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center"><i class="fas fa-tasks"></i></div>
+                    <div class="whitespace-nowrap">Manage Tutors</div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content w-full p-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <!-- Header and Actions -->
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Manage Courses</h1>
+                        <p class="mt-1 text-gray-600">View, edit, and organize all your courses.</p>
+                    </div>
+                    <button class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2 text-sm font-semibold shadow">
+                        <i class="fas fa-plus"></i> Create New Course
+                    </button>
+                </div>
+                <!-- Search and Filter Controls -->
+                <div class="flex flex-wrap items-center gap-4 mb-4">
+                    <div class="relative flex-grow">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </span>
+                        <input type="text" id="course-search" placeholder="Search by course name..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="relative">
+                        <select id="course-sort" class="appearance-none w-full bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="name_asc">Sort by Name (A-Z)</option>
+                            <option value="name_desc">Sort by Name (Z-A)</option>
+                            <option value="learners_desc">Sort by Learners (High-Low)</option>
+                            <option value="learners_asc">Sort by Learners (Low-High)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Course Name</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Learners</th>
+                                <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="py-3 px-6 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courses-table-body" class="text-gray-700">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Details Card Section (Initially Hidden) -->
+            <div id="details-card-section" class="mt-8 hidden">
+                <!-- JS will populate this section with a details card -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let dummyCourses = [
+            { id: 1, name: 'Introduction to Python', learners: 45, tutors: 12, status: 'Published', code: 'PY101-FALL' },
+            { id: 2, name: 'Advanced Algebra', learners: 32, tutors: 8, status: 'Published', code: 'ALG202-SPR' },
+            { id: 3, name: 'Web Development Basics', learners: 28, tutors: 5, status: 'Draft', code: 'WD301-FALL' },
+            { id: 5, name: 'Machine Learning Concepts', learners: 55, tutors: 4, status: 'Published', code: 'ML401-FALL' },
+            { id: 6, name: 'Creative Writing Workshop', learners: 21, tutors: 1, status: 'Draft', code: 'CW101-SPR' },
+        ];
+        
+        let dummyLearners = {
+            1: [{id: 201, name: 'Alice'}, {id: 202, name: 'Bob'}],
+            2: [{id: 203, name: 'Charlie'}],
+            3: [],
+            5: [],
+            6: []
+        };
+
+        function renderCoursesTable(courses) {
+            const tableBody = document.getElementById('courses-table-body');
+            tableBody.innerHTML = courses.map(course => {
+                const statusBadge = course.status === 'Published'
+                    ? `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200">Published</span>`
+                    : `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-yellow-600 bg-yellow-200">Draft</span>`;
+                return `
+                    <tr id="course-row-${course.id}" class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-6 font-medium">${course.name}</td>
+                        <td class="py-4 px-6">${course.learners}</td>
+                        <td class="py-4 px-6">${statusBadge}</td>
+                        <td class="py-4 px-6 text-right relative">
+                            <button onclick="toggleActionMenu(event, ${course.id})" class="text-gray-500 hover:text-indigo-600 focus:outline-none"><i class="fas fa-ellipsis-v"></i></button>
+                            <div id="action-menu-${course.id}" class="action-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 text-left">
+                                <a href="#details-card-section" onclick="viewCourseDetails(${course.id})" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-eye w-6"></i>View Details</a>
+                                <a href="#details-card-section" onclick="editCourseDetails(${course.id})" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-pencil-alt w-6"></i>Edit Course</a>
+                                <a href="#details-card-section" onclick="manageCourseLearners(${course.id})" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-users-cog w-6"></i>Manage Learners</a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        const detailsSection = document.getElementById('details-card-section');
+
+        function hideDetailsCard() {
+            detailsSection.classList.add('hidden');
+            detailsSection.innerHTML = '';
+            document.querySelectorAll('tr[id^="course-row-"]').forEach(row => row.classList.remove('bg-indigo-100'));
+        }
+        
+        function showDetailsCard(htmlContent, courseId) {
+            detailsSection.innerHTML = htmlContent;
+            detailsSection.classList.remove('hidden');
+            document.querySelectorAll('tr[id^="course-row-"]').forEach(row => row.classList.remove('bg-indigo-100'));
+            document.getElementById(`course-row-${courseId}`).classList.add('bg-indigo-100');
+        }
+
+        // --- Details Card Functions (unchanged) ---
+        function viewCourseDetails(id) { /* ... unchanged ... */ 
+            const course = dummyCourses.find(c => c.id === id);
+            const html = `<div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-indigo-500"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-info-circle text-indigo-500 mr-3"></i>Course Details: ${course.name}</h2><button onclick="hideDetailsCard()" class="text-gray-500 hover:text-red-600">&times;</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700"><p><strong>Status:</strong> ${course.status}</p><p><strong>Learners Enrolled:</strong> ${course.learners}</p><p><strong>Assigned Tutors:</strong> ${course.tutors}</p><p><strong>Enrollment Code:</strong> <span class="font-mono bg-gray-200 p-1 rounded">${course.code}</span></p></div></div>`;
+            showDetailsCard(html, id);
+        }
+        function editCourseDetails(id) { /* ... unchanged ... */ 
+            const course = dummyCourses.find(c => c.id === id);
+            const html = `<div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-edit text-yellow-500 mr-3"></i>Edit Course: ${course.name}</h2><button onclick="hideDetailsCard()" class="text-gray-500 hover:text-red-600">&times;</button></div><div class="space-y-4"><div><label for="edit-course-name" class="block text-sm font-medium text-gray-700">Course Name</label><input type="text" id="edit-course-name" value="${course.name}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></div><div><label for="edit-course-status" class="block text-sm font-medium text-gray-700">Status</label><select id="edit-course-status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"><option value="Published" ${course.status === 'Published' ? 'selected' : ''}>Published</option><option value="Draft" ${course.status === 'Draft' ? 'selected' : ''}>Draft</option></select></div></div><div class="mt-6 flex justify-end gap-3"><button onclick="hideDetailsCard()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg">Cancel</button><button onclick="saveCourseChanges(${id})" class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600">Save Changes</button></div></div>`;
+            showDetailsCard(html, id);
+        }
+        function saveCourseChanges(id) { /* ... unchanged ... */ 
+            const course = dummyCourses.find(c => c.id === id); course.name = document.getElementById('edit-course-name').value; course.status = document.getElementById('edit-course-status').value; filterAndRender(); hideDetailsCard();
+        }
+        function manageCourseLearners(id) { /* ... unchanged ... */
+            const course = dummyCourses.find(c => c.id === id); const learners = dummyLearners[id] || []; const learnersHtml = learners.length > 0 ? learners.map(l => `<li class="flex justify-between items-center p-2 bg-gray-100 rounded">${l.name} <button class="text-red-500 text-xs">Remove</button></li>`).join('') : `<li class="text-gray-500">No learners enrolled.</li>`; const html = `<div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500"><div class="flex justify-between items-center mb-4"><h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-users text-green-500 mr-3"></i>Manage Learners: ${course.name}</h2><button onclick="hideDetailsCard()" class="text-gray-500 hover:text-red-600">&times;</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div><h3 class="font-bold mb-2">Enrolled Learners (${learners.length})</h3><ul class="space-y-2">${learnersHtml}</ul></div><div><h3 class="font-bold mb-2">Add New Learner</h3><div class="flex gap-2"><input type="email" placeholder="learner@example.com" class="flex-grow border-gray-300 rounded-md shadow-sm"><button class="bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600">Add</button></div></div></div><div class="mt-6 flex justify-end"><button onclick="hideDetailsCard()" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg">Done</button></div></div>`; showDetailsCard(html, id);
+        }
+        
+        // --- UTILITY & EVENT LISTENERS ---
+        function filterAndRender() {
+            const searchTerm = document.getElementById('course-search').value.toLowerCase();
+            const sortValue = document.getElementById('course-sort').value;
+
+            let processedData = [...dummyCourses]
+                .filter(c => c.name.toLowerCase().includes(searchTerm));
+            
+            processedData.sort((a, b) => {
+                switch(sortValue) {
+                    case 'name_asc': return a.name.localeCompare(b.name);
+                    case 'name_desc': return b.name.localeCompare(a.name);
+                    case 'learners_desc': return b.learners - a.learners;
+                    case 'learners_asc': return a.learners - b.learners;
+                    default: return 0;
+                }
+            });
+
+            renderCoursesTable(processedData);
+        }
+
+        function toggleActionMenu(event, id) {
+            event.stopPropagation();
+            closeAllActionMenus();
+            document.getElementById(`action-menu-${id}`).classList.toggle('show');
+        }
+
+        function closeAllActionMenus() {
+            document.querySelectorAll('.action-menu').forEach(menu => menu.classList.remove('show'));
+        }
+
+        document.addEventListener('click', closeAllActionMenus);
+        document.addEventListener('DOMContentLoaded', () => {
+            filterAndRender();
+            document.getElementById('course-search').addEventListener('keyup', filterAndRender);
+            document.getElementById('course-sort').addEventListener('change', filterAndRender);
+        });
+    </script>
+</body>
+</html>

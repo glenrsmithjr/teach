@@ -1,0 +1,63 @@
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="../static/javascript/instructor/main-content/builder.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+<!-- Add a wrapper to enable flexbox layout -->
+<div class="app-container">
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-robot"></i>
+                <h2>Tutor Builder Agent</h2>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+            <button id="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tutor Display Container (Initially Hidden via CSS) -->
+    <div id="tutor-display-container" class="tutor-display-container">
+        <!-- This header is now a flex container -->
+        <div class="tutor-title-header flex justify-between items-center">
+
+            <!-- This is the left-side item -->
+            <h2 id="tutor-title">Tutor Editor</h2>
+
+            <!-- This new div groups the buttons on the right -->
+            <div class="flex items-center gap-3">
+                <button id="confirm-tutor-button" class="confirm-all-button">Confirm Tutor</button>
+                <button id="create-agent-button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        style="display: none">Create Agent
+                </button>
+            </div>
+
+        </div>
+
+        <div id="tutor-frame" class="tutor-frame"></div>
+    </div>
+
+</div> <!-- Close the app-container wrapper -->
+
+
+<!-- Loading Modal -->
+<div class="loading-modal" id="loading-modal">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Building your tutor...</p>
+    </div>
+</div>

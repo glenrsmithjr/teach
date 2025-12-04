@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Instructor Dashboard{% endblock %}
+
+{% block sidebar %}
+    {% include "instructor/left-sidebars/sidebar-instructor.html" %}
+{% endblock %}
+
+{% block content %}
+<script src="{{ url_for('static', filename='javascript/instructor/main-content/dashboard/main-dashboard.js') }}"></script>
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Instructor Dashboard</h1>
+        <p class="mt-1 text-gray-600">Welcome back! Here's a summary of your courses and learner activity.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between transition-all hover:shadow-lg hover:-translate-y-1">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Total Learners</p>
+                <p class="text-3xl font-bold text-gray-800" id="metric-total-learners">--</p>
+            </div>
+            <div class="bg-indigo-100 text-indigo-500 p-3 rounded-full"><i class="fas fa-users fa-lg"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between transition-all hover:shadow-lg hover:-translate-y-1">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Active Courses</p>
+                <p class="text-3xl font-bold text-gray-800" id="metric-active-courses">--</p>
+            </div>
+            <div class="bg-green-100 text-green-500 p-3 rounded-full"><i class="fas fa-chalkboard-teacher fa-lg"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between transition-all hover:shadow-lg hover:-translate-y-1">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Authored Tutors</p>
+                <p class="text-3xl font-bold text-gray-800" id="metric-authored-tutors">--</p>
+            </div>
+            <div class="bg-yellow-100 text-yellow-500 p-3 rounded-full"><i class="fas fa-robot fa-lg"></i></div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between transition-all hover:shadow-lg hover:-translate-y-1">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Avg. Engagement</p>
+                <p class="text-3xl font-bold text-gray-800" id="metric-avg-engagement">--</p>
+            </div>
+            <div class="bg-blue-100 text-blue-500 p-3 rounded-full"><i class="fas fa-chart-line fa-lg"></i></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h2 class="text-xl font-bold text-gray-800">My Courses</h2>
+                    <button onclick="handleMenuItemClick(event, 'create-course')" class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2 text-sm font-semibold">
+                        <i class="fas fa-plus"></i> New Course
+                    </button>
+                </div>
+                <div class="space-y-4" id="courses-list"><p class="text-gray-500">Loading courses...</p></div>
+                <div class="mt-4 text-right">
+                    <a href="#" onclick="handleMenuItemClick(event, 'manage-courses')" class="text-indigo-600 hover:underline text-sm font-medium">View All Courses &rarr;</a>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h2 class="text-xl font-bold text-gray-800">Recently Updated Tutors</h2>
+                    <button onclick="handleMenuItemClick(event, 'create-tutor')" class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2 text-sm font-semibold">
+                        <i class="fas fa-plus"></i> New Tutor
+                    </button>
+                </div>
+                <div class="space-y-4" id="tutors-list"><p class="text-gray-500">Loading tutors...</p></div>
+                <div class="mt-4 text-right">
+                    <a href="#" onclick="handleMenuItemClick(event, 'manage-tutors')" class="text-indigo-600 hover:underline text-sm font-medium">View All Tutors &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Export Reports</h2>
+                <p class="text-gray-600 mb-5 text-sm">Download CSV reports for your records and analysis.</p>
+                <div class="space-y-3">
+                    <button onclick="downloadReport('learners')" class="w-full text-left bg-green-50 hover:bg-green-100 text-green-800 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center gap-3">
+                        <i class="fas fa-file-csv w-5 text-center text-green-600"></i> Download Learner Data
+                    </button>
+                    <button onclick="downloadReport('courses')" class="w-full text-left bg-green-50 hover:bg-green-100 text-green-800 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center gap-3">
+                        <i class="fas fa-file-csv w-5 text-center text-green-600"></i> Download Course Data
+                    </button>
+                    <button onclick="downloadReport('tutors')" class="w-full text-left bg-green-50 hover:bg-green-100 text-green-800 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center gap-3">
+                        <i class="fas fa-file-csv w-5 text-center text-green-600"></i> Download Tutor Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+                <ul class="space-y-4" id="activity-feed"><p class="text-gray-500">Loading activity...</p></ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

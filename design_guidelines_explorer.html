@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Guideline Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* A slightly lighter gray */
+        }
+
+        .control-panel {
+            /*background-color: rgba(255, 255, 255, 0.85);*/
+
+            backdrop-filter: blur(12px);
+            background: transparent;
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .custom-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+<div id="root"></div>
+
+<script type="text/babel">
+    const App = () => {
+        // --- DATA ---
+        const csvData = `Guideline Code,Associated Guideline,Ideation Issue Statement,COI dimension,Stakeholder,Problem
+G1,AI tools should be easy to understand and frictionless to use,The AI tool has a big learning curve and I need an introduction / tutorial on what it can do and how to use it,Cognitive,"Teacher, Learner","Low Engagement, Access"
+G1,AI tools should be easy to understand and frictionless to use,"I need an AI tool that works without errors and is easy for me to understand quickly, or I won't use it (because my time is better spent elsewhere)",Cognitive,"Teacher, Learner","Low Engagement, Access"
+G1,AI tools should be easy to understand and frictionless to use,"I want to design AI tools that are intuitive, easy to use, and promote natural interactions to avoid confusion over the interface and expectations of the tool",Cognitive,"Teacher, Learner","Low Engagement, Access"
+G2,AI tools should minimize cognitive load by presenting essential information clearly and simply ,I want to build tools that utilize design principles to direct attention and recall information where it is needed,Cognitive,Developer,"Low Learning, Low Engagement"
+G2,AI tools should minimize cognitive load by presenting essential information clearly and simply ,"I want tools that are simple and do not unnecessarily increase cognitive load, because I believe it will motivate students to use the tool more",Cognitive,Developer,"Low Learning, Low Engagement"
+G3,AI tools should align with instructional practices and course content,The AI should be aligned with the content of my class,Teaching,Teacher,"Low Adoption, Trust"
+G3,AI tools should align with instructional practices and course content,I won't use the AI if it isn't aligned with my teaching approach and style ,Teaching,Teacher,"Low Adoption, Trust"
+G3,AI tools should align with instructional practices and course content,I want to involve teachers in the design process to increase relevance and alignment to course content and teach style towards increasing teaching presence,Teaching,Teacher,"Low Adoption, Trust"
+G4,AI tools should integrate seamlessly with users' existing educational technology ecosystem,"I want to build AI tools that are employ open standards to avoid vendor lock, make third-party integration easier, and reduce cost",Teaching,Developer,Low Adoption
+G4,AI tools should integrate seamlessly with users' existing educational technology ecosystem,"I want ways to appropriately integrate AI with my other tools (eg, through LMS integration) and to effectively manage AI tool notifications",Teaching,Developer,Low Adoption
+G5,AI tools should be accessible and fit  into the busy lives of instructors and learners,My tools should adopt good design principles that make learning accessible to everyone,Cognitive,"Teacher, Learner",Access
+G5,AI tools should be accessible and fit  into the busy lives of instructors and learners,"I should be able to access AI help on a phone, with or without internet, and it should be affordable",Cognitive,"Teacher, Learner",Access
+G5,AI tools should be accessible and fit  into the busy lives of instructors and learners,"I (an adult) have limited time and resources, and learning needs to to fit into my life",Cognitive,"Teacher, Learner",Access
+G5,AI tools should be accessible and fit  into the busy lives of instructors and learners,"I think AI's ability to provide extra help anytime anywhere makes it ""super human""",Cognitive,"Teacher, Learner",Access
+G6,"AI tools should provide actionable insights to instructors, learners, and researchers","I want to know who are using the tools, who did what, and to track their progress","Teaching, Cognitive","Teacher, Researcher, Learner","Low Engagement, Low Learning"
+G6,"AI tools should provide actionable insights to instructors, learners, and researchers",I want detailed learning analytics (through visualizations) so I can make better instructional decisions,"Teaching, Cognitive","Teacher, Researcher, Learner","Low Engagement, Low Learning"
+G6,"AI tools should provide actionable insights to instructors, learners, and researchers",I want the tools to collect data and use it to facilitate teacher and tool personalization,"Teaching, Cognitive","Teacher, Researcher, Learner","Low Engagement, Low Learning"
+G6,"AI tools should provide actionable insights to instructors, learners, and researchers",Learning tools should be designed for continuous improvements and learning engineering through historical data,"Teaching, Cognitive","Teacher, Researcher, Learner","Low Engagement, Low Learning"
+G7,AI tools should be transparent about data practices and share data governance with learners,"I want to know what data is being collected about me and have control over how it will be used, so I can balance privacy with benefits",Social,"Developer, Researcher, Learner","Access, Trust"
+G8,AI tools should provide learners with agency over their learning,"I want to options/choices for how I engage with content, as well as access to supplementary content",Cognitive,Learner,"Low Adoption, Low Engagement"
+G8,AI tools should provide learners with agency over their learning,I want to have agency in my learning,Cognitive,Learner,"Low Adoption, Low Engagement"
+G9,AI tools should cultivate learners' metacognitive and critical thinking skills,"I want to build tools that coach meta-cognitive strategies, such as summarization, pre-writing, self-explanation, hypothesis testing",Cognitive,"Learner, Researcher",Low Learning
+G9,AI tools should cultivate learners' metacognitive and critical thinking skills,I want my AI tools to cultivate reflective and critical thinking skills,Cognitive,"Learner, Researcher",Low Learning
+G10,AI tools should support learners’ motivation and cultivate self-efficacy,"I think engagement improves learning, so we use several techniques to drive AI tool engagement (motivational messages/feedback, social connections, personalization, competition, and intrinsic/extrinsic rewards)",Cognitive,Learner,Low Engagement
+G10,AI tools should support learners’ motivation and cultivate self-efficacy,"I want to view my self as successful, so progress motivates me and being told I'm wrong feels terrible",Cognitive,Learner,Low Engagement
+G10,AI tools should support learners’ motivation and cultivate self-efficacy,I want tools that scaffold problem solving step-by-step,Cognitive,Learner,Low Engagement
+G11,"AI tools should offer meaningful challenges that are aligned with learners' context, goals, and career",I want my learning to support my career,"Cognitive, Teaching",Learner,Low Engagement
+G11,"AI tools should offer meaningful challenges that are aligned with learners' context, goals, and career",I find learning more engaging when it is aligned to my goals,"Cognitive, Teaching",Learner,Low Engagement
+G11,"AI tools should offer meaningful challenges that are aligned with learners' context, goals, and career",I want to practice meaningful problems relevant to my context,"Cognitive, Teaching",Learner,Low Engagement
+G12,AI tools should foster social connection and  community,I want AI to foster community and a sense of belonging,Social,"Learner, Developer","Low Adoption, Low Engagement"
+G12,AI tools should foster social connection and  community,"My AI tools should help me to form deep social connections (eg, shared goals, interests, hobbies)",Social,"Learner, Developer","Low Adoption, Low Engagement"
+G13,AI tools should maintain the human touch and supplement rather than replace human instructors  ,I want AI to provide explanations and sources from human experts so I can believe what the AI says is correct,"Social, Teaching","Learner, Teacher, Developer","Low Adoption, Trust"
+G13,AI tools should maintain the human touch and supplement rather than replace human instructors  ,"I prefer interacting with humans (over AI) and I don't want to lose the ""human"" part of learning","Social, Teaching","Learner, Teacher, Developer","Low Adoption, Trust"
+G13,AI tools should maintain the human touch and supplement rather than replace human instructors  ,I want AI to provide explanations and sources from human experts so I can believe what the AI says is correct,"Social, Teaching","Learner, Teacher, Developer","Low Adoption, Trust"
+G13,AI tools should maintain the human touch and supplement rather than replace human instructors  ,"I prefer interacting with humans (over AI) and I don't want to lose the ""human"" part of learning","Social, Teaching","Learner, Teacher, Developer","Low Adoption, Trust"
+G13,AI tools should maintain the human touch and supplement rather than replace human instructors  ,AI could never replace my teacher,"Social, Teaching","Learner, Teacher, Developer","Low Adoption, Trust"
+G14,AI tools should scaffold and support learners in developing their social competencies,I am worried that AI interactions will degrade my social skills and relationships,"Social, Teaching","Learner, Developer",Low Engagement
+G14,AI tools should scaffold and support learners in developing their social competencies,I find it intimidating to engage socially with others—I don't want to annoy them or ask dumb questions,"Social, Teaching","Learner, Developer",Low Engagement
+G14,AI tools should scaffold and support learners in developing their social competencies,"I don't know how to start a conversation with people I just met, especially in large asynchronous classes or when there are barriers like large age/generational differences","Social, Teaching","Learner, Developer",Low Engagement
+G15,AI tools should be transparent and explainable,I want to understand how the AI works and I want it to better understand me,Teaching,Developer,Trust
+G15,AI tools should be transparent and explainable,I want explanations for why my answers are wrong and/or how to do it,Teaching,Developer,Trust
+G15,AI tools should be transparent and explainable,I want to know why the AI thinks my answer is  wrong,Teaching,Developer,Trust
+G16,"AI tools should provide  accurate, contextualized help when learners need it","I find it satisfying when the tool to gives me exactly what  I need instantly, and frustrating if it doesn't","Teaching, Cognitive",Developer,"Low Engagement, Trust, Low Learning"
+G16,"AI tools should provide  accurate, contextualized help when learners need it",I want the tool to recognize when I need help or have a misunderstanding and proactively provides me what I need,"Teaching, Cognitive",Developer,"Low Engagement, Trust, Low Learning"
+G16,"AI tools should provide  accurate, contextualized help when learners need it",I am concerned about the accuracy of the AI—how do I know I can trust it and who is responsible when it is wrong?,"Teaching, Cognitive",Developer,"Low Engagement, Trust, Low Learning"
+G16,"AI tools should provide  accurate, contextualized help when learners need it",I want  to minimize AI hallucination and prevent harmful output,"Teaching, Cognitive",Developer,"Low Engagement, Trust, Low Learning"
+G17,"AI tools should personalize  learning  based on a learner's  knowledge, skills, and abilities","I want to build tools that personalize to learner knowledge, adapting the learning sequence and level of difficulty","Cognitive, Teaching","Teacher, Developer",Low Learning
+G17,"AI tools should personalize  learning  based on a learner's  knowledge, skills, and abilities","Adults have varied knowledge, expertise, and needs, and personalization is more important for adults learners than K12 learners","Cognitive, Teaching","Teacher, Developer",Low Learning
+G18,"AI tools should encourage active, constructive, and interactive engagement over passive consumption ",I want tools that engage students in interactv inquiry/questioning through a conversational/discussion-based chatbot,Cognitive,"Researcher, Developer","Low Learning, Low Engagement"
+G18,"AI tools should encourage active, constructive, and interactive engagement over passive consumption ",I want to collaborate with my peers to improve my learning,Cognitive,"Researcher, Developer","Low Learning, Low Engagement"
+G18,"AI tools should encourage active, constructive, and interactive engagement over passive consumption ",I design generative tasks that require learners to restructure knowledge and create their own understanding,Cognitive,"Researcher, Developer","Low Learning, Low Engagement"
+G18,"AI tools should encourage active, constructive, and interactive engagement over passive consumption ",I structure learning experiences to promote active and interactive engagement over passive consumption,Cognitive,"Researcher, Developer","Low Learning, Low Engagement"
+G19,AI tools should be informed by learning science and learning theories,I think learning technologies should be informed by learning science and learning theories,Cognitive,"Researcher, Developer",Low Learning`;
+
+        // --- STATE MANAGEMENT ---
+        const [searchTerm, setSearchTerm] = React.useState('');
+        const [searchOn, setSearchOn] = React.useState('both');
+        const [groupBy, setGroupBy] = React.useState('guideline');
+        const [filters, setFilters] = React.useState({stakeholder: new Set(), problem: new Set(), coi: new Set()});
+
+        // --- PARSING & DATA PREPARATION ---
+        const cardsData = React.useMemo(() => {
+            const rows = csvData.trim().split('\n');
+            const headers = rows.shift().split(',').map(h => h.trim());
+            return rows.map((row, index) => {
+                const values = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+                const card = {id: index};
+                headers.forEach((header, i) => {
+                    let value = (values[i] || '').trim().replace(/^"|"$/g, '').replace('Reseacher', 'Researcher');
+                    let key = '';
+                    if (header.toLowerCase().includes('guideline code')) key = 'guidelineCode';
+                    else if (header.toLowerCase().includes('guideline')) key = 'guideline';
+                    else if (header.toLowerCase().includes('ideation')) key = 'ideation';
+                    else if (header.toLowerCase().includes('coi')) key = 'coi';
+                    else if (header.toLowerCase().includes('stakeholder')) key = 'stakeholder';
+                    else if (header.toLowerCase().includes('problem')) key = 'problem';
+
+                    if (key) {
+                        if (['coi', 'stakeholder', 'problem'].includes(key)) {
+                            card[key] = value.split(',').map(s => s.trim()).filter(Boolean);
+                        } else {
+                            card[key] = value;
+                        }
+                    }
+                });
+                return card;
+            });
+        }, []);
+
+        const uniqueTags = React.useMemo(() => ({
+            stakeholder: [...new Set(cardsData.flatMap(card => card.stakeholder || []))].sort(),
+            problem: [...new Set(cardsData.flatMap(card => card.problem || []))].sort(),
+            coi: [...new Set(cardsData.flatMap(card => card.coi || []))].sort(),
+        }), [cardsData]);
+
+        // --- FILTERING & GROUPING LOGIC ---
+        const filteredAndGroupedCards = React.useMemo(() => {
+            const filteredCards = cardsData.filter(card => {
+                // Handle search term
+                const term = searchTerm.trim();
+                let matchesSearch = true;
+
+                if (term) {
+                    const isPhraseSearch = term.startsWith('"') && term.endsWith('"');
+
+                    const ideationText = card.ideation.toLowerCase();
+                    const guidelineText = card.guideline.toLowerCase();
+
+                    if (isPhraseSearch) {
+                        const phrase = term.substring(1, term.length - 1).toLowerCase();
+                        if (phrase) { // Only search if there's content between the quotes
+                            if (searchOn === 'ideation') {
+                                matchesSearch = ideationText.includes(phrase);
+                            } else if (searchOn === 'guideline') {
+                                matchesSearch = guidelineText.includes(phrase);
+                            } else {
+                                matchesSearch = ideationText.includes(phrase) || guidelineText.includes(phrase);
+                            }
+                        }
+                    } else { // Keyword Search
+                        const keywords = term.toLowerCase().split(' ').filter(kw => kw.length > 0);
+
+                        const checkText = (text) => keywords.every(kw => text.includes(kw));
+
+                        if (searchOn === 'ideation') {
+                            matchesSearch = checkText(ideationText);
+                        } else if (searchOn === 'guideline') {
+                            matchesSearch = checkText(guidelineText);
+                        } else {
+                            const combinedText = ideationText + ' ' + guidelineText;
+                            matchesSearch = checkText(combinedText);
+                        }
+                    }
+                }
+
+                if (!matchesSearch) return false;
+
+                // Handle filters
+                for (const category in filters) {
+                    const activeTags = filters[category];
+                    if (activeTags.size > 0 && !([...activeTags].some(tag => card[category].includes(tag)))) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            const groups = {};
+            filteredCards.forEach(card => {
+                let groupKeys = (groupBy === 'guideline') ? [`${card.guidelineCode}: ${card.guideline.replace(/\.$/, '')}`] : (card[groupBy] || ['Uncategorized']);
+                groupKeys.forEach(key => {
+                    if (!groups[key]) groups[key] = [];
+                    groups[key].push(card);
+                });
+            });
+
+            const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+                if (groupBy === 'guideline') {
+                    const matchA = a.match(/^G(\d+):/);
+                    const matchB = b.match(/^G(\d+):/);
+                    if (matchA && matchB) {
+                        const numA = parseInt(matchA[1], 10);
+                        const numB = parseInt(matchB[1], 10);
+                        return numA - numB;
+                    }
+                }
+                // Fallback for other groupings or if pattern doesn't match
+                return a.localeCompare(b);
+            });
+
+            return sortedGroupKeys.map(key => ({
+                groupKey: key,
+                cards: groups[key]
+            }));
+
+        }, [searchTerm, searchOn, filters, groupBy, cardsData]);
+
+        // --- EVENT HANDLERS ---
+        const handleFilterChange = (category, value, isChecked) => {
+            setFilters(prevFilters => {
+                const newSet = new Set(prevFilters[category]);
+                if (isChecked) newSet.add(value);
+                else newSet.delete(value);
+                return {...prevFilters, [category]: newSet};
+            });
+        };
+
+        const clearAllFilters = () => {
+            setFilters({stakeholder: new Set(), problem: new Set(), coi: new Set()});
+        };
+
+        // --- UI COMPONENTS ---
+        const SingleSelectDropdown = ({label, options, value, onChange}) => {
+            const [isOpen, setIsOpen] = React.useState(false);
+            const dropdownRef = React.useRef(null);
+
+            React.useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                };
+                document.addEventListener("mousedown", handleClickOutside);
+                return () => document.removeEventListener("mousedown", handleClickOutside);
+            }, [dropdownRef]);
+
+            const handleSelect = (optionValue) => {
+                onChange(optionValue);
+                setIsOpen(false);
+            };
+
+            return (
+                    <div className="relative" ref={dropdownRef}>
+                        <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="w-full h-11 px-4 text-left bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                            <span className="text-gray-700">{label}: <span
+                                    className="font-semibold">{options[value]}</span></span>
+                            <svg className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd"
+                                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                      clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        {isOpen && (
+                                <div className="absolute z-20 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl overflow-y-auto">
+                                    <div className="p-2 space-y-1">
+                                        {Object.entries(options).map(([optionValue, optionLabel]) => (
+                                                <button
+                                                        key={optionValue}
+                                                        onClick={() => handleSelect(optionValue)}
+                                                        className={`w-full text-left px-3 py-2 text-sm rounded-md ${value === optionValue ? 'bg-indigo-500 text-white' : 'text-gray-800 hover:bg-gray-100'}`}
+                                                >
+                                                    {optionLabel}
+                                                </button>
+                                        ))}
+                                    </div>
+                                </div>
+                        )}
+                    </div>
+            );
+        };
+
+        const MultiSelectDropdown = ({category, label, options}) => {
+            const [isOpen, setIsOpen] = React.useState(false);
+            const dropdownRef = React.useRef(null);
+            const selectedOptions = filters[category];
+
+            React.useEffect(() => {
+                const handleClickOutside = (event) => {
+                    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                        setIsOpen(false);
+                    }
+                };
+                document.addEventListener("mousedown", handleClickOutside);
+                return () => document.removeEventListener("mousedown", handleClickOutside);
+            }, [dropdownRef]);
+
+            const selectedCount = selectedOptions.size;
+
+            return (
+                    <div className="relative" ref={dropdownRef}>
+                        <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="w-full h-11 px-4 text-left bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                        <span className="text-gray-700">
+                            {label} {selectedCount > 0 ? `(${selectedCount})` : ''}
+                        </span>
+                            <svg className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd"
+                                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                      clipRule="evenodd"/>
+                            </svg>
+                        </button>
+                        {isOpen && (
+                                <div className="absolute z-20 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                                    <div className="p-4 space-y-3">
+                                        {options.map(option => {
+                                            const id = `filter-${category}-${option.replace(/\s+/g, '-')}`;
+                                            return (
+                                                    <div key={id} className="flex items-center">
+                                                        <input
+                                                                id={id}
+                                                                type="checkbox"
+                                                                checked={selectedOptions.has(option)}
+                                                                onChange={(e) => handleFilterChange(category, option, e.target.checked)}
+                                                                className="custom-checkbox h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                                        />
+                                                        <label htmlFor={id}
+                                                               className="ml-3 block text-sm text-gray-800 cursor-pointer">{option}</label>
+                                                    </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                        )}
+                    </div>
+            );
+        };
+
+        const tagColors = {
+            stakeholder: 'bg-sky-100 text-sky-800 border-sky-200',
+            problem: 'bg-rose-100 text-rose-800 border-rose-200',
+            coi: 'bg-amber-100 text-amber-800 border-amber-200'
+        };
+
+        const lightbulbIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-yellow-400"
+                                   viewBox="0 0 20 20" fill="currentColor">
+            <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM9 12a1 1 0 012 0v5a1 1 0 11-2 0v-5zM4.343 5.757a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM1 10a1 1 0 011-1h1a1 1 0 110 2H2a1 1 0 01-1-1z"/>
+            <path d="M10 7a3 3 0 00-3 3c0 1.657 1.343 3 3 3s3-1.343 3-3a3 3 0 00-3-3z"/>
+            <path d="M12.586 14.586A2 2 0 119.414 11.414a2 2 0 013.172 3.172z"/>
+            <path d="M16.95 11a1 1 0 100-2h-1a1 1 0 100 2h1z"/>
+        </svg>;
+
+        const groupByOptions = {
+            guideline: 'Guideline',
+            stakeholder: 'Stakeholder',
+            problem: 'Problem',
+            coi: 'COI Dimension',
+        };
+
+        return (
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <header className="text-center pt-8 pb-4">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">AI Technology Design Guidelines Explorer</h1>
+                        <p className="mt-3 max-w-2xl mx-auto text-lg text-gray-500">An interactive tool to search and explore design guidelines
+                            for AI technologies that support Adult Learners.</p>
+                    </header>
+
+                        <div className="control-panel space-y-4 p-5 rounded-xl border border-gray-200 bg-white/50">
+                            {/* Top Row: Search */}
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                                <div className="md:col-span-3">
+                                    <label htmlFor="search" className="block text-sm font-semibold text-gray-700 mb-2">Search
+                                        Guidelines</label>
+                                    <div className="relative">
+                                        <div className="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                                            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path fillRule="evenodd"
+                                                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                                                      clipRule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <input
+                                                type="text"
+                                                id="search"
+                                                placeholder={`Keywords or "exact phrase"`}
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                className="block w-full rounded-lg border-gray-300 shadow-sm pl-10 h-11 focus:border-indigo-500 focus:ring-indigo-500"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="md:col-span-2 self-end">
+                                    <div id="search-on" className="inline-flex rounded-md shadow-sm w-full h-11" role="group">
+                                        {['both', 'ideation', 'guideline'].map((item) => (
+                                                <button
+                                                        key={item}
+                                                        type="button"
+                                                        onClick={() => setSearchOn(item)}
+                                                        className={`w-full px-4 py-2 text-sm font-medium capitalize border first:rounded-l-lg last:rounded-r-lg ${searchOn === item ? 'bg-indigo-600 text-white border-indigo-600 z-10' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                                                >
+                                                    {item === 'both' ? 'All Text' : item}
+                                                </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Bottom Row: Filters */}
+                            <div>
+                                <div className="flex justify-between items-center mb-2 mt-4">
+                                    <h3 className="text-sm font-semibold text-gray-700">Filters</h3>
+                                    <button onClick={clearAllFilters}
+                                            className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Clear
+                                        All Filters
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+                                    <SingleSelectDropdown label="Group By" options={groupByOptions} value={groupBy}
+                                                          onChange={setGroupBy}/>
+                                    <MultiSelectDropdown category="stakeholder" label="Stakeholders"
+                                                         options={uniqueTags.stakeholder}/>
+                                    <MultiSelectDropdown category="problem" label="Problems"
+                                                         options={uniqueTags.problem}/>
+                                    <MultiSelectDropdown category="coi" label="COI Dimensions"
+                                                         options={uniqueTags.coi}/>
+                                </div>
+                            </div>
+                        </div>
+
+                    <main id="card-groups-container" className="space-y-12 py-10">
+                        {filteredAndGroupedCards.length > 0 ? (
+                                filteredAndGroupedCards.map(({groupKey, cards}) => (
+                                        <div key={groupKey}>
+                                            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 pb-3 border-b-2 border-indigo-200">{groupKey}</h2>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                                {cards.map(card => (
+                                                        <div key={card.id}
+                                                             className="flex flex-col bg-gradient-to-br from-indigo-50 via-white to-sky-100 rounded-xl shadow-lg border border-gray-200/80 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+                                                            <div className="p-5 bg-gray-800 text-white flex items-center">{lightbulbIcon}
+                                                                <h3 className="font-bold">Ideation Statement</h3></div>
+                                                            <div className="p-6 flex-grow"><p
+                                                                    className="text-gray-600 text-lg italic leading-relaxed">"{card.ideation}"</p>
+                                                            </div>
+                                                            <div className="px-6 pb-6 space-y-4 mt-auto">
+                                                                <div className="border-t border-gray-200 pt-4 space-y-3">
+                                                                    {['stakeholder', 'problem', 'coi'].map(cat => (
+                                                                            card[cat] && card[cat].length > 0 && (
+                                                                                    <div key={cat}
+                                                                                         className="flex items-start">
+                                                                                        <p className="text-xs font-bold text-gray-500 w-28 flex-shrink-0">{cat.charAt(0).toUpperCase() + cat.slice(1)}:</p>
+                                                                                        <div className="flex flex-wrap gap-2">{card[cat].map(tag =>
+                                                                                                <span key={tag}
+                                                                                                      className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border ${tagColors[cat]}`}>{tag}</span>)}</div>
+                                                                                    </div>
+                                                                            )
+                                                                    ))}
+                                                                </div>
+                                                                <div className="border-t border-gray-200 pt-4"><p
+                                                                        className="text-sm font-semibold text-indigo-800">{card.guidelineCode}: {card.guideline.replace(/\.$/, '')}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                ))
+                        ) : (
+                                <div className="text-center py-16 px-6 bg-white rounded-lg shadow-sm border">
+                                    <h3 className="text-xl font-semibold text-gray-700">No guidelines match your
+                                        criteria.</h3>
+                                    <p className="mt-2 text-gray-500">Try adjusting your search or clearing some
+                                        filters.</p>
+                                </div>
+                        )}
+                    </main>
+                </div>
+        );
+    };
+
+    ReactDOM.render(<App/>, document.getElementById('root'));
+</script>
+</body>
+</html>

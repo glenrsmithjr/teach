@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apprentice Tutors</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .submenu-transition {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        
+        .rotate-icon {
+            transform: rotate(-90deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .submenu-collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .submenu-expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .sidebar-collapsed {
+            width: 5rem;
+        }
+        
+        .sidebar-expanded {
+            width: 16rem;
+        }
+        
+        .content-with-sidebar-collapsed {
+            margin-left: 5rem;
+        }
+        
+        .content-with-sidebar-expanded {
+            margin-left: 16rem;
+        }
+        
+        .invisible-collapsed {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+            transition: opacity 0.3s, visibility 0.3s, width 0.3s;
+        }
+        
+        .visible-expanded {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-hover:hover .dropdown-menu {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed top-0 left-0 z-40 h-screen sidebar-transition bg-gray-900 text-gray-100 shadow-xl flex flex-col overflow-hidden sidebar-expanded">
+            <div class="flex items-center justify-between p-5 border-b border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                        T
+                    </div>
+                    <div id="logoText" class="font-bold text-xl whitespace-nowrap transition-opacity duration-300 visible-expanded">
+                        Apprentice Tutors
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="flex-1 overflow-y-auto py-5 px-3">
+                <!-- Main -->
+                <h3 id="mainHeader" class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2">Main</h3>
+                
+                <a href="#dashboard" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all bg-indigo-500" onclick="handleMenuItemClick(event, 'dashboard')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Dashboard
+                    </div>
+                </a>
+
+                <!-- Tutors -->
+                <h3 id="tutorsHeader" class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Tutors</h3>
+
+                <a href="#create-tutor" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'create-tutor')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Create Tutor
+                    </div>
+                </a>
+
+                <a href="#manage-tutors" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'manage-tutors')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M3 6h18"></path>
+                          <path d="M3 12h18"></path>
+                          <path d="M3 18h18"></path>
+                          <path d="M10 6L8 4 6 6"></path>
+                          <path d="M10 18L8 20 6 18"></path>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Manage Tutors
+                    </div>
+                </a>
+
+                <a href="#tutor-library" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'tutor-library')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                          <line x1="10" y1="6" x2="16" y2="6"></line>
+                          <line x1="10" y1="10" x2="16" y2="10"></line>
+                          <line x1="10" y1="14" x2="13" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Tutor Library
+                    </div>
+                </a>
+
+                <!-- Learner Management -->
+                <h3 id="studentHeader" class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Learners</h3>
+
+                <a href="#learners" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'learners')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Learners
+                    </div>
+                </a>
+
+                <!-- Help & Support -->
+                <h3 id="helpHeader" class="uppercase text-xs tracking-wider text-gray-400 px-4 mb-2 mt-6">Support</h3>
+                
+                <a href="#help-support" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'help-support')">
+                    <div class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Help & Support
+                    </div>
+                </a>
+
+                <!-- Profile & Settings -->
+                <a href="#profile-settings" class="flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all hover:bg-gray-800" onclick="handleMenuItemClick(event, 'profile-settings')">
+                    <div id="profile-settings" class="min-w-6 h-6 mr-4 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                    </div>
+                    <div class="whitespace-nowrap transition-all duration-300 visible-expanded">
+                        Profile & Settings
+                    </div>
+                </a>
+            </div>
+
+            <!-- Sidebar Toggle
+            <div id="sidebarToggle" class="absolute left-[-16px] bottom-5 w-8 h-8 bg-indigo-500 text-white rounded-full flex items-center justify-center cursor-pointer border-2 border-white shadow-md z-50 transition-transform" onclick="toggleSidebar()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </div>
+            -->
+            <div id="sidebarToggle" style="position: absolute; right: 10px; bottom: 15px; z-index: 999;"
+             class="w-8 h-8 bg-indigo-500 text-white rounded-full flex items-center justify-center cursor-pointer border-2 border-white shadow-md transition-transform"
+             onclick="toggleSidebar()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </div>
+
+
+        </aside>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="transition-all duration-300 p-8 content-with-sidebar-expanded w-full">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h1 id="contentTitle" class="text-2xl font-bold mb-4 text-gray-800">Dashboard</h1>
+                
+                <p class="text-gray-600 mb-6">
+                    This is an interactive demo of the TutorCraft sidebar navigation component. Click on the menu items to navigate between different sections.
+                </p>
+                
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-3 text-gray-700">Instructions</h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Click the arrow button <span class="inline-block bg-indigo-500 text-white rounded-full w-5 h-5 text-center">◀</span> on the sidebar edge to collapse/expand the menu</li>
+                        <li>Click on menu categories with dropdown arrows to expand/collapse their submenus</li>
+                        <li>In collapsed mode, hover over items with submenus to see their options</li>
+                        <li>The active menu item is highlighted in indigo</li>
+                    </ul>
+                </div>
+                
+                <div id="dashboardContent" class="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 class="font-semibold text-blue-800">Dashboard Overview</h3>
+                    <p class="text-blue-700 mt-2">Welcome to the TutorCraft dashboard. Here you'll find an overview of your tutoring activity, upcoming sessions, and student progress.</p>
+                </div>
+                
+                <div id="sectionContent" class="mt-6 bg-indigo-50 p-4 rounded-lg border border-indigo-200 hidden">
+                    <h3 id="sectionTitle" class="font-semibold text-indigo-800">Content for: </h3>
+                    <p class="text-indigo-700 mt-2">This area would contain the specific content and functionality for this section of the application.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let isSidebarCollapsed = false;
+        let activeItem = 'dashboard';
+        let expandedMenus = {
+            tutors: false,
+            students: false
+        };
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const logoText = document.getElementById('logoText');
+            const mainHeader = document.getElementById('mainHeader');
+            const tutorsHeader = document.getElementById('tutorsHeader');
+            const studentHeader = document.getElementById('studentHeader');
+            const helpHeader = document.getElementById('helpHeader');
+            //const tutorsArrow = document.getElementById('tutorsArrow');
+            //const studentsArrow = document.getElementById('studentsArrow');
+            
+            isSidebarCollapsed = !isSidebarCollapsed;
+            // Applies when sidebar is already collapsed
+            if (isSidebarCollapsed) {
+                sidebar.classList.remove('sidebar-expanded');
+                sidebar.classList.add('sidebar-collapsed');
+                
+                mainContent.classList.remove('content-with-sidebar-expanded');
+                mainContent.classList.add('content-with-sidebar-collapsed');
+                
+                sidebarToggle.classList.add('rotate-180');
+                
+                logoText.classList.remove('visible-expanded');
+                logoText.classList.add('invisible-collapsed');
+                
+                //tutorsArrow.classList.remove('visible-expanded');
+                //tutorsArrow.classList.add('invisible-collapsed');
+                
+                //studentsArrow.classList.remove('visible-expanded');
+                //studentsArrow.classList.add('invisible-collapsed');
+                
+                // Hide section headers when sidebar is collapsed
+                mainHeader.classList.add('hidden');
+                tutorsHeader.classList.add('hidden');
+                studentHeader.classList.add('hidden');
+                helpHeader.classList.add('hidden');
+                
+                // Hide/show text in menu items
+                const menuTexts = document.querySelectorAll('#sidebar .visible-expanded');
+                menuTexts.forEach(text => {
+                    text.classList.remove('visible-expanded');
+                    text.classList.add('invisible-collapsed');
+                });
+                
+                // Update submenu styles for collapsed mode
+
+                //const submenus = document.querySelectorAll('#tutorsSubmenu, #studentsSubmenu');
+                //submenus.forEach(submenu => {
+
+                //    submenu.classList.add('submenu-collapsed');
+                //    submenu.classList.remove('submenu-expanded');
+                //});
+            // Applies when the sidebar is already expanded
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+                
+                mainContent.classList.remove('content-with-sidebar-collapsed');
+                mainContent.classList.add('content-with-sidebar-expanded');
+                
+                sidebarToggle.classList.remove('rotate-180');
+                
+                logoText.classList.remove('invisible-collapsed');
+                logoText.classList.add('visible-expanded');
+                
+                //tutorsArrow.classList.remove('invisible-collapsed');
+                //tutorsArrow.classList.add('visible-expanded');
+                //tutorsArrow.classList.add('rotate-icon');
+                
+                //studentsArrow.classList.remove('invisible-collapsed');
+                //studentsArrow.classList.add('visible-expanded');
+                //studentsArrow.classList.add('rotate-icon');
+                
+                // Show section headers when sidebar is expanded
+                mainHeader.classList.remove('hidden');
+                tutorsHeader.classList.remove('hidden');
+                studentHeader.classList.remove('hidden');
+                helpHeader.classList.remove('hidden');
+                
+                // Show text in menu items
+                const menuTexts = document.querySelectorAll('#sidebar .invisible-collapsed');
+                menuTexts.forEach(text => {
+                    text.classList.remove('invisible-collapsed');
+                    text.classList.add('visible-expanded');
+                });
+                
+                // Restore submenu styles for expanded mode
+                //const submenus = document.querySelectorAll('#tutorsSubmenu, #studentsSubmenu');
+                //submenus.forEach(submenu => {
+                    //submenu.classList.remove('absolute', 'left-full', 'top-0', 'w-48', 'p-2', 'shadow-lg', 'opacity-0');
+                    ///submenu.classList.add('ml-2');
+                    //submenu.classList.add('submenu-collapsed');
+                    //submenu.classList.remove('submenu-expanded');
+
+                    
+                    // Only show the expanded submenu
+                    //if ((submenu.id === 'tutorsSubmenu' && expandedMenus.tutors) ||
+                    //    (submenu.id === 'studentsSubmenu' && expandedMenus.students)) {
+                    //    submenu.style.display = 'block';
+                    //}
+                //});
+            }
+        }
+        
+        function toggleSubmenu(menuName) {
+            // If sidebar is collapsed, expand it first and then expand this tab
+            if (isSidebarCollapsed) {
+                // First expand the sidebar
+                toggleSidebar();
+
+                // Then, after sidebar is expanded, open this menu
+                setTimeout(() => {
+                    // Set this menu to expanded
+                    expandedMenus[menuName] = true;
+
+                    // Get relevant elements
+                    const submenuId = menuName === 'tutors' ? 'tutorsSubmenu' : 'studentsSubmenu';
+                    const submenu = document.getElementById(submenuId);
+                    const arrow = document.getElementById(menuName + 'Arrow');
+
+                    // Expand the submenu
+                    submenu.classList.remove('submenu-collapsed');
+                    submenu.classList.add('submenu-expanded');
+                    arrow.classList.remove('rotate-icon');
+                }, 300); // Slight delay to let the sidebar expansion animation complete
+
+                return;
+            }
+
+            // Original functionality for expanded sidebar
+            const submenuId = menuName === 'tutors' ? 'tutorsSubmenu' : 'studentsSubmenu';
+            const submenu = document.getElementById(submenuId);
+            const arrow = document.getElementById(menuName + 'Arrow');
+
+            expandedMenus[menuName] = !expandedMenus[menuName];
+
+            if (expandedMenus[menuName]) {
+                submenu.classList.remove('submenu-collapsed');
+                submenu.classList.add('submenu-expanded');
+                arrow.classList.remove('rotate-icon');
+            } else {
+                submenu.classList.remove('submenu-expanded');
+                submenu.classList.add('submenu-collapsed');
+                arrow.classList.add('rotate-icon');
+            }
+        }
+        
+        function handleMenuItemClick(event, itemName) {
+            event.preventDefault();
+            
+            // Remove active class from current active item
+            const currentActive = document.querySelector('a.bg-indigo-500');
+            if (currentActive) {
+                currentActive.classList.remove('bg-indigo-500');
+                currentActive.classList.add('hover:bg-gray-800');
+            }
+            
+            // Add active class to clicked item
+            event.currentTarget.classList.remove('hover:bg-gray-800');
+            event.currentTarget.classList.add('bg-indigo-500');
+            
+            activeItem = itemName;
+            
+            // Update content area
+            const contentTitle = document.getElementById('contentTitle');
+            const dashboardContent = document.getElementById('dashboardContent');
+            const sectionContent = document.getElementById('sectionContent');
+            const sectionTitle = document.getElementById('sectionTitle');
+            
+            switch (itemName) {
+                case 'dashboard':
+                    contentTitle.textContent = 'Dashboard';
+                    dashboardContent.classList.remove('hidden');
+                    sectionContent.classList.add('hidden');
+                    break;
+                    
+                default:
+                    contentTitle.textContent = getPageTitle(itemName);
+                    dashboardContent.classList.add('hidden');
+                    sectionContent.classList.remove('hidden');
+                    sectionTitle.textContent = 'Content for: ' + itemName;
+            }
+        }
+        
+        function getPageTitle(itemName) {
+            switch (itemName) {
+                case 'tutor-create':
+                    return 'Create New Tutor';
+                case 'tutor-manage':
+                    return 'Manage Existing Tutors';
+                case 'tutor-library':
+                    return 'Tutor Library';
+                case 'student-list':
+                    return 'Students';
+                case 'student-analytics':
+                    return 'Student Analytics';
+                case 'help-support':
+                    return 'Help & Support';
+                case 'profile-settings':
+                    return 'Profile & Settings';
+                default:
+                    return itemName.charAt(0).toUpperCase() + itemName.slice(1);
+            }
+        }
+        
+        // Handle hover for submenus in collapsed mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownHovers = document.querySelectorAll('.dropdown-hover');
+            
+            dropdownHovers.forEach(hover => {
+                hover.addEventListener('mouseenter', function() {
+                    if (!isSidebarCollapsed) return;
+                    
+                    const submenu = this.querySelector('.dropdown-menu');
+                    if (submenu) {
+                        submenu.style.display = 'block';
+                        submenu.style.opacity = '1';
+                        submenu.style.pointerEvents = 'auto';
+                    }
+                });
+                
+                hover.addEventListener('mouseleave', function() {
+                    if (!isSidebarCollapsed) return;
+                    
+                    const submenu = this.querySelector('.dropdown-menu');
+                    if (submenu) {
+                        submenu.style.opacity = '0';
+                        submenu.style.pointerEvents = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

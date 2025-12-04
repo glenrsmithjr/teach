@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Tutor Interface Builder{% endblock %}
+
+{% block head_extra %}
+    <!-- Main styling files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/main-content/builder/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/main-content/builder/canvas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/main-content/builder/chatbox.css') }}">
+    <!-- Component sidebar styling files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/component-sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/choice-elements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/interactive-tasks.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/layout-media.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/math-elements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/shapes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/component-sidebar/components/text-and-input.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor/right-sidebars/builder/expert-model-sidebar.css') }}">
+    <style>
+        /* Styles for the new button and the locked canvas state */
+        .builder-btn-success {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+        .builder-btn-success:hover {
+            background-color: #218838;
+        }
+        .builder-btn-danger {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+        .builder-btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* When canvas is locked, prevent interaction with form elements and hide handles/actions */
+        .canvas-locked .builder-form-element {
+            pointer-events: none; /* Disables mouse events on elements */
+            cursor: not-allowed;
+        }
+        .canvas-locked .builder-resize-handle,
+        .canvas-locked .builder-element-actions {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "instructor/left-sidebars/sidebar-instructor.html" %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="builder-page-header">
+        <h1 class="builder-page-title">Interface Builder</h1>
+   <div class="builder-action-buttons-split">
+    <div class="builder-view-controls">
+        <button class="builder-btn builder-btn-outline" id="builder-chat-visibility-toggle">Hide Chat</button>
+        <div class="builder-view-divider"></div>
+        <label class="builder-toggle-switch">
+            <span>Show Grid</span>
+            <input type="checkbox" id="builder-show-grid" checked>
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+        </label>
+        <label class="builder-toggle-switch">
+            <span>Snap to Grid</span>
+            <input type="checkbox" id="builder-snap-to-grid" checked>
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+        </label>
+        <div class="builder-grid-size-control">
+            <label for="builder-grid-size">Grid Size</label>
+            <select id="builder-grid-size" class="builder-grid-select">
+                <option value="20">20px</option>
+                <option value="25">25px</option>
+                <option value="40">40px</option>
+                <option value="50">50px</option>
+                <option value="80">80px</option>
+                <option value="100">100px</option>
+                <option value="150">150px</option>
+                <option value="200">200px</option>
+            </select>
+        </div>
+        <div class="builder-view-divider"></div>
+        <button class="builder-btn builder-btn-subtle" id="builder-clear-canvas" title="Clear Canvas">
+            <i class="fas fa-trash-alt"></i> Clear Canvas
+        </button>
+    </div>
+
+    <div class="builder-primary-actions">
+        <button class="builder-btn builder-btn-primary" id="builder-save-form">Save Tutor</button>
+        <button class="builder-btn builder-btn-preview" id="builder-preview-tutor"><i class="fas fa-eye"></i> Preview</button>
+        <button class="builder-btn builder-btn-success" id="builder-lock-interface-btn">Confirm & Finalize Tutor</button>
+        <button class="builder-btn builder-btn-success" id="builder-create-expert-model-btn" style="display: none;">Create Expert Model</button>
+    </div>
+</div>
+    </div>
+
+    <div class="builder-workspace">
+        <div id="builder-chat-container" class="builder-chat-container">
+            <div class="builder-chat-header">
+                <div class="builder-chat-title"><i class="fas fa-robot"></i><h2>Tutor Builder Agent</h2></div>
+            </div>
+            <div class="builder-chat-messages" id="builder-chat-messages"></div>
+            <div class="builder-chat-input-container">
+                <input type="text" id="builder-user-input" placeholder="Type your message..." autocomplete="off">
+                <button id="builder-send-button"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div class="builder-canvas-container">
+            <div class="builder-canvas" id="builder-form-canvas">
+                <div class="builder-grid-overlay" id="builder-grid-overlay"></div>
+                <div class="builder-canvas-instruction">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p>Drag and drop form elements here</p>
+                    <p class="builder-small-text">Select elements from the sidebar and place them anywhere on the canvas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="builder-context-menu" id="builder-element-context-menu"></div>
+<div class="builder-loading-modal" id="builder-loading-modal" role="dialog" aria-live="polite">
+  <div class="builder-loading-content">
+    <div class="builder-loading-spinner"></div>
+    <p>Working on it...</p>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block right_sidebar %}
+    <div id="right-sidebar-content-wrapper">
+        {% include "instructor/right-sidebars/builder/component-sidebar.html" %}
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Main scripts -->
+    <script src="{{ url_for('static', filename='javascript/instructor/main-content/builder/chatbox.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/instructor/main-content/builder/main.js') }}"></script>
+
+    <script>
+      window.SIDEBAR_URLS = {
+        expert: "{{ url_for('main.instructor_expert_model_sidebar') }}",
+        component: "{{ url_for('main.instructor_component_sidebar') }}"
+      };
+    </script>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+/* Shapes */
+.builder-shape { width: 100%; height: 100%; background-color: #e9ecef; border: 1px solid #adb5bd; display: flex; align-items: center; justify-content: center; text-align: center; }
+.builder-shape-circle { border-radius: 50%; }
+.builder-shape-text { outline: none; }
+
+/* Line / Arrow */
+.builder-line { width: 100%; height: 2px; background-color: #343a40; position: absolute; top: calc(50% - 1px); left: 0; }
+.builder-arrow { width: 100%; height: 100%; display: flex; align-items: center; }
+.builder-arrow svg { width: 100%; height: 20px; }

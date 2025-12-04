@@ -1,0 +1,190 @@
+/* Chat Component Styles */
+.builder-chat-container { width: var(--builder-chat-width); height: 100%; background-color: white; border-radius: 20px; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; transition: width var(--builder-transition-speed) ease, padding var(--builder-transition-speed) ease, opacity var(--builder-transition-speed) ease; }
+.builder-workspace.chat-hidden .builder-chat-container { width: 0; padding: 0; opacity: 0; margin-right: -30px; }
+.builder-chat-header { padding: 0 20px; height: 65px; background-color: #ffffff; border-bottom: 1px solid #f0f2f5; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.builder-chat-title { display: flex; align-items: center; gap: 10px; }
+.builder-chat-title i { font-size: 20px; color: #3578e5; }
+.builder-chat-title h2 { font-size: 18px; font-weight: 600; color: #1c1e21; white-space: nowrap; }
+.builder-chat-messages { flex: 1; padding: 20px; overflow-y: auto; background-color: #f8f9fa; }
+.builder-user-message { background-color: #e2f5fe; border-radius: 18px 18px 0 18px; padding: 12px 16px; margin-bottom: 15px; float: right; clear: both; max-width: 85%; word-wrap: break-word; }
+.builder-agent-message { background-color: #f0f0f0; border-radius: 18px 18px 18px 0; padding: 12px 16px; margin-bottom: 15px; float: left; clear: both; max-width: 85%; word-wrap: break-word; }
+.builder-chat-input-container { padding: 15px; display: flex; align-items: center; background-color: #ffffff; border-top: 1px solid #f0f2f5; }
+#builder-user-input { flex: 1; padding: 12px 16px; border: none; border-radius: 20px; background-color: #f0f2f5; font-size: 15px; outline: none; }
+#builder-send-button { margin-left: 10px; width: 40px; height: 40px; border: none; border-radius: 50%; background-color: #0084ff; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+.builder-agent-typing {
+  background-color: #f3f4f6;
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  max-width: 80%;
+  float: left;
+  clear: both;
+  font-size: 0.95rem;
+}
+
+.typing-dots { display: inline-flex; gap: 6px; align-items: center; }
+.typing-dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #9ca3af;
+  animation: blink 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* Typing Indicator Styling */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f0f0f0;
+    border-radius: 18px;
+    width: fit-content;
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #9ca3af;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 2px;
+    animation: dot-pulse 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes dot-pulse {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
+
+
+/* List Message Styling */
+.list-item {
+    display: flex;
+    align-items: flex-start; /* Align to top for multi-line content */
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.list-item .item-text {
+    flex-grow: 1;
+    min-width: 0;
+    word-wrap: break-word;
+}
+
+/* Title and Description styles */
+.item-title {
+    font-weight: 600;
+    color: #1c1e21;
+    margin-bottom: 4px;
+}
+
+.item-description {
+    font-size: 0.9rem;
+    color: #606770;
+    line-height: 1.4;
+}
+
+.item-content-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important for width: 100% */
+}
+
+/* Spacing and styling for edit mode inputs */
+.item-content-input.title-input {
+    margin-bottom: 8px;
+}
+
+.item-content-input.description-input {
+    resize: vertical; /* Allow user to resize the description box */
+}
+
+.button-group {
+    display: flex;
+    flex-shrink: 0;
+    gap: 6px;
+}
+
+.edit-button, .save-button, .delete-button {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.edit-button {
+    color: #007bff;
+    padding: 0.25rem 0.5rem;
+}
+
+.edit-button:hover {
+    color: #0056b3;
+    background-color: #f3f4f6;
+}
+
+.save-button {
+    color: #28a745;
+    padding: 0.25rem 0.5rem;
+}
+
+.save-button:hover {
+    color: #218838;
+    background-color: #f3f4f6;
+}
+
+.delete-button {
+    color: #dc3545;
+    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
+}
+
+.delete-button:hover {
+    color: #c82333;
+    background-color: #f3f4f6;
+}
+
+.confirm-all-button {
+    background-color: #10b981;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.confirm-all-button:hover {
+    background-color: #059669;
+}
+
+.confirm-all-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-item-placeholder {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 10px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.add-item-placeholder:hover {
+    background-color: #f0f7ff;
+}

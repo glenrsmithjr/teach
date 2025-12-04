@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apprentice Tutors - Register</title>
+    <!-- Using Tailwind 2.2.19 as in the original file -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            /* Added padding-top to ensure space for the logo */
+            padding-top: 4rem;
+        }
+        .register-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(71, 85, 105, 0.1);
+            width: 100%;
+            max-width: 600px;
+            /* EDIT: Changed overflow to visible to fix logo clipping */
+            overflow: visible;
+        }
+        .register-header {
+            background-color: #1e293b;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            /* Ensure header has rounded top corners */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+        .register-body {
+            padding: 2rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .btn-primary:disabled {
+            background-color: #a5b4fc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .logo-badge {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #4f46e5;
+            border-radius: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: absolute;
+            top: 0.01rem;
+            left: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .error-message {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        .success-message {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        .eye-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        .form-checkbox {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+            border: 1px solid #d1d5db;
+            accent-color: #4f46e5;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-note {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        .password-requirements {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+            /* Default icon color */
+            color: #ef4444;
+        }
+        /* EDIT: Updated password requirement styling */
+        .password-requirement.valid {
+            /* Green color for valid items */
+            color: #22c55e;
+        }
+        .password-requirement .requirement-icon {
+            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .password-requirement .requirement-text {
+            /* Default text color */
+            color: #475569;
+        }
+        .password-requirement.valid .requirement-text {
+             /* Green text color when valid */
+            color: #22c55e;
+        }
+        /* END EDIT */
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .role-option {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .role-option:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+        .role-option.selected {
+            border-color: #4f46e5;
+            background-color: rgba(79, 70, 229, 0.05);
+        }
+        .role-icon {
+            margin: 0 auto 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        .role-option.selected .role-icon {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .link:hover {
+            color: #4338ca;
+            text-decoration: underline;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+
+                <h1 style="margin-top: 1.25rem; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Create your account
+                </h1>
+                <p style="color: #cbd5e1; font-size: 0.875rem;">Join Apprentice Tutors to start your educational journey</p>
+            </div>
+
+            <div class="register-body">
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+
+                <form id="registerForm">
+                    <!-- Step 1: Basic Info -->
+                    <div id="step1" class="form-section active">
+                        <div class="role-selector">
+                            <!-- EDIT: selectRole now also triggers form validation -->
+                            <div class="role-option" data-role="learner" onclick="selectRole('learner')">
+                                <div class="role-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="role-name" style="font-weight: 500; margin-bottom: 0.25rem;">Learner</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">I want to learn</div>
+                            </div>
+                            <div class="role-option" data-role="instructor" onclick="selectRole('instructor')">
+                                <div class="role-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
+                                <div class="role-name" style="font-weight: 500; margin-bottom: 0.25rem;">Instructor</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">I want to teach</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    name="first_name"
+                                    class="form-input"
+                                    placeholder="John"
+                                    required
+                                    oninput="validateForm()"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    name="last_name"
+                                    class="form-input"
+                                    placeholder="Doe"
+                                    required
+                                    oninput="validateForm()"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-input"
+                                placeholder="your@email.com"
+                                required
+                                oninput="validateForm()"
+                            >
+                            <div class="form-note">We'll never share your email with anyone else.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div style="position: relative;">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="••••••••"
+                                    required
+                                    onkeyup="checkPasswordStrength()"
+                                >
+                                <div id="togglePassword" class="eye-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="password-requirements">
+                                <div class="password-requirement" id="req-length">
+                                    <div class="requirement-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="requirement-text">At least 8 characters</div>
+                                </div>
+                                <div class="password-requirement" id="req-uppercase">
+                                    <div class="requirement-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="requirement-text">At least one uppercase letter</div>
+                                </div>
+                                <div class="password-requirement" id="req-lowercase">
+                                    <div class="requirement-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="requirement-text">At least one lowercase letter</div>
+                                </div>
+                                <div class="password-requirement" id="req-number">
+                                    <div class="requirement-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="requirement-text">At least one number</div>
+                                </div>
+                                <div class="password-requirement" id="req-special">
+                                    <div class="requirement-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="requirement-text">At least one special character</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div style="position: relative;">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirm_password"
+                                    class="form-input"
+                                    placeholder="••••••••"
+                                    required
+                                    onkeyup="checkPasswordMatch()"
+                                >
+                            </div>
+                            <div id="passwordMatch" class="form-note" style="display: none; color: #22c55e;">Passwords match!</div>
+                            <div id="passwordMismatch" class="form-note" style="display: none; color: #ef4444;">Passwords do not match</div>
+                        </div>
+
+                        <!-- EDIT: Added School Code field -->
+                        <div class="form-group">
+                            <label for="schoolCode" class="form-label">School Code</label>
+                            <input
+                                type="text"
+                                id="schoolCode"
+                                name="school_code"
+                                class="form-input"
+                                placeholder="Enter your school code"
+                                required
+                                oninput="validateForm()"
+                            >
+                        </div>
+                        <!--
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <input
+                                type="checkbox"
+                                id="termsAgree"
+                                name="terms_agree"
+                                class="form-checkbox"
+                                required
+                                onchange="validateForm()"
+                            >
+
+                            <label for="termsAgree" style="margin-left: 0.5rem; font-size: 0.875rem; color: #475569;">
+                                I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+                            </label>
+
+                        </div>
+                        -->
+
+                        <!-- EDIT: Added id="continueButton" and disabled attribute -->
+                        <button type="button" class="btn-primary" id="continueButton" onclick="goToStep(2)" disabled>
+                            Continue
+                        </button>
+                    </div>
+
+
+                </form>
+
+                <div style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: #475569;">
+                    Already have an account? <a href="/auth/login-page" class="link">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" class="overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        let selectedRole = 'learner'; // Default role
+        let currentStep = 1;
+        // EDIT: Added global flag for password validity
+        let isPasswordValid = false;
+
+        // Role selection
+        function selectRole(role) {
+            selectedRole = role;
+
+            // Update UI (This logic already handles request #3)
+            document.querySelectorAll('.role-option').forEach(option => {
+                if (option.getAttribute('data-role') === role) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+
+            // Pre-select role for step 2
+            if (role === 'learner') {
+                document.getElementById('learnerFields').style.display = 'block';
+                document.getElementById('instructorFields').style.display = 'none';
+            } else {
+                document.getElementById('learnerFields').style.display = 'none';
+                document.getElementById('instructorFields').style.display = 'block';
+            }
+
+            // EDIT: Trigger form validation
+            validateForm();
+        }
+
+        // Initialize with learner selected
+        selectRole('learner');
+
+        // Multi-step form navigation
+        function goToStep(step) {
+            // Validate current step before proceeding
+            if (currentStep === 1 && step === 2) {
+                // This validation is now handled by the button state, but we keep
+                // this as a fallback.
+                if (!validateStep1()) {
+                    return false;
+                }
+            }
+
+            // Hide all steps
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show the requested step
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+        }
+
+        // Validate step 1 (used for error messages on submit)
+        function validateStep1() {
+            clearMessages();
+
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const schoolCode = document.getElementById('schoolCode').value;
+            const termsAgree = document.getElementById('termsAgree').checked;
+
+            // Check required fields
+            if (!firstName || !lastName || !email || !password || !confirmPassword || !schoolCode) {
+                showError('All fields are required');
+                return false;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+
+            // Validate password strength (using global flag)
+            if (!isPasswordValid) {
+                showError('Password does not meet all requirements');
+                return false;
+            }
+
+            // Check password match
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return false;
+            }
+
+            // Terms agreement
+            if (!termsAgree) {
+                showError('You must agree to the Terms of Service and Privacy Policy');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Registration form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate all inputs
+            if (!validateStep1()) {
+                goToStep(1);
+                return;
+            }
+
+            // Collect form data
+            const formData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                role: selectedRole,
+                // EDIT: Added school_code to form data
+                school_code: document.getElementById('schoolCode').value
+            };
+
+            // Add role-specific data
+            if (selectedRole === 'learner') {
+                formData.grade_level = document.getElementById('gradeLevel').value;
+            } else if (selectedRole === 'instructor') {
+                formData.institution = document.getElementById('institution').value;
+                formData.department = document.getElementById('department').value;
+                formData.bio = document.getElementById('bio').value;
+            }
+
+            // Show loading
+            showLoading();
+
+            try {
+                // Call the registration API endpoint
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Handle error response
+                    hideLoading();
+                    showError(data.error || 'Registration failed. Please try again.');
+                    return;
+                }
+
+                // Registration successful
+
+                // Store tokens
+                localStorage.setItem('access_token', data.access_token);
+                localStorage.setItem('refresh_token', data.refresh_token);
+
+                // Store user info
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Show success message
+                hideLoading();
+                showSuccess('Registration successful! Redirecting to dashboard...');
+
+                // Redirect based on user role after brief delay
+                setTimeout(() => {
+                    const userRole = data.user.role;
+
+                    switch (userRole) {
+                        case 'instructor':
+                            window.location.href = '/instructor/dashboard';
+                            break;
+                        case 'learner':
+                            window.location.href = '/learner/dashboard';
+                            break;
+                        default:
+                            window.location.href = '/';
+                    }
+                }, 2000);
+
+            } catch (error) {
+                hideLoading();
+                showError('Network error. Please try again later.');
+                console.error('Registration error:', error);
+            }
+        });
+
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Change the eye icon
+            this.innerHTML = type === 'password' ?
+                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>` :
+                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>`;
+        });
+
+        // Show loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+
+            // Hide success message if visible
+            document.getElementById('successMessage').style.display = 'none';
+
+            // Scroll to error message
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+
+            // Hide error message if visible
+            document.getElementById('errorMessage').style.display = 'none';
+
+            // Scroll to success message
+            successElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Clear messages
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Check password strength
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+
+            // Check requirements
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+            // Update UI for each requirement
+            updateRequirement('req-length', hasLength);
+            updateRequirement('req-uppercase', hasUppercase);
+            updateRequirement('req-lowercase', hasLowercase);
+            updateRequirement('req-number', hasNumber);
+            updateRequirement('req-special', hasSpecial);
+
+            // EDIT: Set the global password validity flag
+            isPasswordValid = hasLength && hasUppercase && hasLowercase && hasNumber && hasSpecial;
+
+            // Also check for password match
+            checkPasswordMatch();
+
+            // EDIT: Trigger main form validation
+            validateForm();
+
+            return isPasswordValid;
+        }
+
+        // Update password requirement UI
+        function updateRequirement(id, isValid) {
+            const element = document.getElementById(id);
+
+            if (isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+            } else {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+            }
+        }
+
+        // Check if password is strong (helper for old validation)
+        function isPasswordStrong(password) {
+            // This logic is now duplicated in checkPasswordStrength, but
+            // we'll keep it for the original validateStep1 function.
+            // Better yet, let's just use the global flag.
+            return isPasswordValid;
+        }
+
+        // Check if passwords match
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            let didMatch = false;
+
+            if (confirmPassword.length === 0) {
+                document.getElementById('passwordMatch').style.display = 'none';
+                document.getElementById('passwordMismatch').style.display = 'none';
+            } else if (password === confirmPassword) {
+                document.getElementById('passwordMatch').style.display = 'block';
+                document.getElementById('passwordMismatch').style.display = 'none';
+                didMatch = true;
+            } else {
+                document.getElementById('passwordMatch').style.display = 'none';
+                document.getElementById('passwordMismatch').style.display = 'block';
+                didMatch = false;
+            }
+
+            // EDIT: Trigger main form validation
+            validateForm();
+            return didMatch;
+        }
+
+        // EDIT: New function to validate the entire form for enabling/disabling the continue button
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const schoolCode = document.getElementById('schoolCode').value;
+            const termsAgree = document.getElementById('termsAgree').checked;
+            const continueButton = document.getElementById('continueButton');
+
+            // Check all conditions
+            const isFirstNameValid = firstName.trim() !== '';
+            const isLastNameValid = lastName.trim() !== '';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isEmailValid = emailRegex.test(email);
+
+            // isPasswordValid is the global flag set by checkPasswordStrength()
+
+            const isConfirmPassValid = (password === confirmPassword) && (confirmPassword.length > 0);
+            const isSchoolCodeValid = schoolCode.trim() !== '';
+
+            // selectedRole is global and always has a value, so no need to check it
+            // as one is always selected by default.
+
+            const allValid = isFirstNameValid &&
+                             isLastNameValid &&
+                             isEmailValid &&
+                             isPasswordValid && // Use the global flag
+                             isConfirmPassValid &&
+                             isSchoolCodeValid &&
+                             termsAgree;
+
+            // Enable or disable the button
+            continueButton.disabled = !allValid;
+        }
+
+        // EDIT: Set initial form state on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial password requirement icons (will all be invalid)
+            checkPasswordStrength();
+            // Set initial button state (will be disabled)
+            validateForm();
+        });
+
+    </script>
+</body>
+</html>

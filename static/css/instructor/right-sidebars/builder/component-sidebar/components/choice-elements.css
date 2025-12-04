@@ -1,0 +1,29 @@
+.checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 8px; }
+.checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; }
+
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider.round-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+.slider.round-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+input:checked + .slider.round-slider { background-color: var(--builder-primary); }
+input:focus + .slider.round-slider { box-shadow: 0 0 1px var(--builder-primary); }
+input:checked + .slider.round-slider:before { transform: translateX(20px); }
+.slider.round-slider.round { border-radius: 24px; }
+.slider.round-slider.round:before { border-radius: 50%; }
+
+/* Slider */
+.builder-slider-container { display: flex; flex-direction: column; justify-content: center; padding: 10px; height: 100%; position: relative; }
+.builder-slider-container input[type="range"] { width: 100%; }
+.builder-slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: #6b7280; }
+.slider-value-display {
+    display: none;
+    position: absolute;
+    bottom: 55%;
+    background-color: #374151;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    transform: translateX(-50%); /* Center on the calculated left position */
+}
+.builder-form-element.selected .slider-value-display { display: block; }

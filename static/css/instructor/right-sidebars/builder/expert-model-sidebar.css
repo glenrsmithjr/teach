@@ -1,0 +1,557 @@
+:root {
+      --em-primary: #6366f1;
+      --em-primary-hover: #4f46e5;
+      --em-secondary: #10b981;
+      --em-secondary-hover: #059669;
+      --em-sidebar-width: 420px;
+      --em-sidebar-min-width: 380px;
+      --em-transition-speed: 0.3s;
+      --em-bg-dark: #111827;
+      --em-bg-light: #f9fafb;
+      --em-text-light: #f3f4f6;
+      --em-text-muted: #9ca3af;
+      --em-border-color: #1f2937;
+      --em-border-color: #1f2937;
+      --em-arrow-color: rgba(255, 255, 255, 0.4);
+      --em-green-outline: #28a745;
+      --em-blue-outline: #3b82f6;
+}
+
+body.em-editing-relationship {
+      user-select: none;
+}
+
+/* Problem Graph Sidebar */
+.em-problem-graph-sidebar {
+    width: var(--em-sidebar-width);
+    min-width: var(--em-sidebar-min-width);
+    height: 100vh;
+    background-color: var(--em-bg-dark);
+    color: var(--em-text-light);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.em-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--em-border-color);
+    position: sticky;
+    top: 0;
+    background-color: var(--em-bg-dark);
+    z-index: 10;
+}
+
+.em-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.em-logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: var(--em-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+.em-sidebar-scroller { overflow-y: auto; flex-grow: 1; }
+
+.em-sidebar-tabs { display: flex; border-bottom: 1px solid var(--em-border-color); }
+
+.em-sidebar-pane { padding: 20px; }
+
+.em-tab-btn {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: var(--em-text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.em-tab-btn:hover {
+    color: var(--em-text-light);
+}
+
+.em-tab-btn.active {
+    color: var(--em-primary);
+    border-bottom-color: var(--em-primary);
+}
+
+/* Relationship Card Styles */
+.em-relationship-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border-left: 3px solid var(--em-primary);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.em-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--em-border-color);
+}
+
+.em-card-header h4 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.em-card-actions button {
+    background: none;
+    border: 1px solid var(--em-text-muted);
+    color: var(--em-text-muted);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.em-card-actions button:hover {
+    background-color: var(--em-border-color);
+    color: var(--em-text-light);
+}
+
+.em-card-actions .em-save-btn {
+    border-color: var(--em-secondary);
+    color: var(--em-secondary);
+}
+
+.em-card-actions .em-save-btn:hover {
+    background-color: var(--em-secondary);
+    color: white;
+}
+
+.em-card-body {
+    padding: 20px 15px;
+}
+
+.em-edit-state h5 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--em-text-muted);
+}
+
+.em-edit-state h5:first-child {
+    margin-top: 0;
+}
+
+.em-selected-inputs-list {
+    list-style: none;
+    padding: 8px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    min-height: 40px;
+}
+.em-selected-inputs-list li {
+    background-color: rgba(56, 189, 248, 0.2);
+    font-style: italic;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+ .em-selected-inputs-list li:last-child {
+    margin-bottom: 0;
+}
+
+ .em-custom-input-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.em-custom-input-container input {
+    flex-grow: 1;
+    padding: 8px;
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid var(--em-border-color);
+    color: var(--em-text-light);
+    border-radius: 4px;
+}
+.em-custom-input-container button {
+    padding: 8px 12px;
+    border: 1px solid var(--em-text-muted);
+    color: var(--em-text-muted);
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.em-operator-select {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(0,0,0,0.2);
+    color: var(--em-text-light);
+    border: 1px solid var(--em-border-color);
+    border-radius: 6px;
+    font-size: 14px;
+}
+.em-operator-select optgroup {
+    font-weight: bold;
+    background-color: var(--em-bg-dark);
+}
+
+/* --- Step Description in Relationship Card --- */
+.em-step-description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--em-text-light);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px; /* Space between description and graph */
+    border-left: 3px solid var(--em-secondary);
+}
+
+/* Problem Graph Styles (inside card) */
+.em-graph-view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    position: relative;
+}
+
+.em-graph-step {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    position: relative;
+}
+
+.em-graph-node {
+    border-radius: 6px;
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    position: relative;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    word-break: break-word;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.em-graph-node.em-output {
+    background-color: rgba(99, 102, 241, 0.3);
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    align-self: center;
+    margin-bottom: 15px;
+}
+
+.em-graph-operation {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    min-width: 120px;
+    min-height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+    position: relative;
+}
+
+.em-graph-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    position: relative;
+    gap: 15px;
+}
+
+svg.em-arrows {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+svg.em-arrows path {
+    fill: none;
+    stroke: var(--em-arrow-color);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+
+/* Style for the new confirm button */
+.em-relationship-confirm-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.em-relationship-confirm-btn:hover {
+    background-color: #218838;
+}
+
+/* Style for cards awaiting confirmation */
+.em-relationship-card.unconfirmed {
+    border-left: 4px solid #ffc107; /* Yellow/Amber */
+}
+
+/* Style for cards that have been confirmed */
+.em-relationship-card.confirmed {
+    border-left: 4px solid #28a745; /* Green */
+    opacity: 0.9;
+}
+
+/* --- UNIFIED CONSOLE STYLES --- */
+.em-console-container { border-radius: 8px; background: rgba(255,255,255, 0.03); padding: 20px; }
+.em-console-field-selector { width: 100%; padding: 10px; background-color: rgba(0,0,0,0.2); color: var(--em-text-light); border: 1px solid var(--em-border-color); border-radius: 6px; font-size: 14px; margin-bottom: 20px; margin-top: 20px; }
+.em-console-save-btn { width: 100%; padding: 10px; background-color: var(--em-secondary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; margin-top: 20px; }
+.em-console-group { margin-bottom: 20px; }
+.em-console-group label { display: block; font-size: 14px; color: var(--em-text-muted); margin-bottom: 8px; }
+.em-console-group input[type="text"], .em-console-group input[type="number"] { width: 100%; padding: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--em-border-color); color: var(--em-text-light); border-radius: 4px; }
+.em-inline-fields { display: flex; gap: 10px; }
+
+.em-console-tabs { display: flex; gap: 5px; margin-bottom: 15px; }
+.em-console-tab { padding: 8px 15px; background: var(--em-border-color); border: none; color: var(--em-text-muted); border-radius: 5px; cursor: pointer; }
+.em-console-tab.active { background: var(--em-primary); color: white; }
+.em-console-tab-content { display: none; }
+.em-console-tab-content.active { display: block; }
+
+.em-toggle-switch { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.em-toggle-switch label { margin-bottom: 0; }
+.em-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0;}
+.em-switch input { opacity: 0; width: 0; height: 0; }
+.em-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.em-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .em-slider { background-color: var(--em-primary); }
+input:checked + .em-slider:before { transform: translateX(20px); }
+
+/* --- Problem Gen Type Toggle --- */
+.em-console-type-toggle {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    padding: 4px;
+    display: inline-flex;
+    width: calc(100% - 8px);
+}
+.em-type-toggle-btn {
+    flex: 1;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--em-text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+.em-type-toggle-btn.active {
+    background-color: var(--em-primary);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* HINTS MODE STYLES */
+#hints-mode-content .em-problem-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--em-text-light);
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  border-left: 4px solid var(--em-primary);
+}
+
+#hints-mode-content .em-step-hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#hints-mode-content .em-step-node {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all var(--em-transition-speed) ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+#hints-mode-content .em-step-node:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#hints-mode-content .em-step-node.expanded {
+  background-color: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+#hints-mode-content .em-step-header {
+  padding: 15px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#hints-mode-content .em-step-number {
+  background-color: var(--em-primary);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+#hints-mode-content .em-step-text {
+  flex: 1;
+  margin-left: 8px;
+}
+
+#hints-mode-content .em-editable {
+  outline: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+#hints-mode-content .em-editable:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+}
+
+#hints-mode-content .em-expand-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--em-transition-speed) ease;
+  color: var(--em-text-muted);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+#hints-mode-content .em-step-node.expanded .em-expand-icon {
+  transform: rotate(90deg);
+}
+
+#hints-mode-content .em-step-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#hints-mode-content .em-step-node.expanded .em-step-details {
+  max-height: 500px;
+}
+
+#hints-mode-content .em-step-content {
+  padding: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#hints-mode-content .em-detail-section {
+  margin-bottom: 15px;
+}
+
+#hints-mode-content .em-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+#hints-mode-content .em-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--em-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#hints-mode-content .em-detail-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--em-text-light);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--em-primary);
+}
+
+#hints-mode-content .em-hint-section .em-detail-text {
+  background-color: rgba(251, 191, 36, 0.1);
+  border-left-color: #fbbf24;
+}
+
+/* --- Input/Output Field Highlight Styles --- */
+.em-input-field-highlight {
+    outline: 2px solid #ef4444; /* Red highlight for input fields */
+    background-color: rgba(239, 68, 68, 0.15);
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+    transition: all 0.2s ease;
+}
+
+.em-input-field-highlight:focus,
+.em-input-field-highlight:hover {
+    outline-color: #dc2626; /* Darker red on interaction */
+    background-color: rgba(239, 68, 68, 0.25);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+.em-output-field-highlight {
+    outline: 2px solid #10b981; /* Green highlight for output fields */
+    background-color: rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    transition: all 0.2s ease;
+}
+
+.em-output-field-highlight:focus,
+.em-output-field-highlight:hover {
+    outline-color: #059669; /* Darker green on interaction */
+    background-color: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}

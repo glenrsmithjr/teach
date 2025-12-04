@@ -1,0 +1,113 @@
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+        <!-- Sidebar scripts -->
+    <script src="{{ url_for('static', filename='javascript/instructor/right-sidebars/builder/expert-model/expert-model-sidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/instructor/right-sidebars/builder/expert-model/tutor-state.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/instructor/right-sidebars/builder/expert-model/tabs/relationships.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/instructor/right-sidebars/builder/expert-model/tabs/problem-gen.js') }}"></script>
+<aside class="em-problem-graph-sidebar">
+    <div class="em-sidebar-header">
+        <div class="em-logo">
+            <div class="em-logo-text">Expert Model Builder</div>
+        </div>
+    </div>
+
+    <div class="em-sidebar-scroller">
+        <div class="em-sidebar-tabs">
+            <button class="em-tab-btn active" data-mode="build">Build Mode</button>
+            <button class="em-tab-btn" data-mode="view">View Mode</button>
+            <button class="em-tab-btn" data-mode="console">Problem Gen</button>
+            <button class="em-tab-btn" data-mode="hints">Hints</button>
+        </div>
+
+        <div id="build-mode-content" class="em-sidebar-pane active">
+            <div id="relationship-builder-container">
+            </div>
+        </div>
+
+        <div id="view-mode-content" class="em-sidebar-pane" style="display: none;">
+            <p style="color: var(--em-text-muted); padding-top: 20px;">The final, consolidated model will be displayed
+                here.</p>
+        </div>
+
+        <div id="console-mode-content" class="em-sidebar-pane" style="display: none;">
+            <select class="em-console-field-selector"></select>
+
+            <div class="em-console-type-toggle" style="display: none; margin: 20px 0 10px; text-align: center;">
+                <button class="em-type-toggle-btn active" data-type="numeric">Numeric</button>
+                <button class="em-type-toggle-btn" data-type="text">Text</button>
+            </div>
+
+            <div class="em-console-container">
+                <div class="em-console-numeric-rules" style="display:none;">
+                    <div class="em-console-group em-toggle-switch">
+                        <label for="integer-only">Integers Only</label>
+                        <label class="em-switch">
+                            <input type="checkbox" id="integer-only" class="em-console-input" data-rule="numericType">
+                            <span class="em-slider"></span>
+                        </label>
+                    </div>
+                    <div class="em-console-group">
+                        <label>Range</label>
+                        <div class="em-inline-fields">
+                            <input type="number" class="em-console-input" data-rule="min" placeholder="Min">
+                            <input type="number" class="em-console-input" data-rule="max" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="em-console-group">
+                        <label>Excluded Values</label>
+                        <input type="text" class="em-console-input" data-rule="exclude" placeholder="e.g. 0, 115">
+                    </div>
+                </div>
+
+                <div class="em-console-text-rules" style="display:none;">
+                    <div class="em-console-tabs">
+                        <button class="em-console-tab active" data-tab="text-basic">Values</button>
+                        <button class="em-console-tab" data-tab="text-advanced">Rules</button>
+                    </div>
+                    <div id="text-basic" class="em-console-tab-content active">
+                        <div class="em-console-group">
+                            <label>Allowed Values</label>
+                            <input type="text" class="em-console-input" data-rule="validValues">
+                        </div>
+                    </div>
+                    <div id="text-advanced" class="em-console-tab-content">
+                        <div class="em-console-group">
+                            <label>Length</label>
+                            <div class="em-inline-fields">
+                                <input type="number" class="em-console-input" data-rule="minLength" placeholder="Min">
+                                <input type="number" class="em-console-input" data-rule="maxLength" placeholder="Max">
+                            </div>
+                        </div>
+                        <div class="em-console-group">
+                            <label>Regex Pattern</label>
+                            <input type="text" class="em-console-input" data-rule="regex"
+                                   placeholder="e.g., ^[A-Z]{3}-\d{3}$">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="em-console-save-btn">Save Constraints</button>
+            </div>
+        </div>
+
+        <div id="hints-mode-content" class="em-sidebar-pane" style="display: none;">
+            <div class="em-sidebar-content">
+                <div class="em-problem-title" id="hintsProblemTitle">
+                </div>
+                <div class="em-step-hierarchy" id="stepHierarchy">
+                    <p style="color: var(--em-text-muted);">No steps generated yet. The solution path will appear here
+                        once defined.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<svg style="width:0; height:0; position:absolute;">
+    <defs>
+        <marker id="em-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--em-arrow-color)"/>
+        </marker>
+    </defs>
+</svg>
